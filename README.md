@@ -1,6 +1,7 @@
 # decisionmaking-code-py
 
 *Original Julia Code by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
+
 *Python Versions by: Griffin Holt*
 
 Python versions of all typeset code blocks from the book, [Algorithms for Decision Making](https://algorithmsbook.com/).
