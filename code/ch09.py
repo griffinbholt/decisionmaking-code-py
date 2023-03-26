@@ -175,7 +175,7 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
             visited.append(s)
             a, u = self.P.greedy(U, s)
             U[s] = u 
-            s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in S])
+            s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
         while len(visited) != 0:
             if self.label(U, solved, visited.pop()):
                 break
