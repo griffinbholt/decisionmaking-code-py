@@ -5,9 +5,6 @@ from typing import Any, Callable
 
 from ch07 import MDP, SolutionMethod, ValueFunctionPolicy
 
-class ApproximateSolutionMethod(SolutionMethod):
-    pass
-
 class ApproximateValueFunction(ABC):
     @abstractmethod
     def __call__(self, s: Any) -> float:
@@ -17,13 +14,13 @@ class ApproximateValueFunction(ABC):
     def fit(self, S: list[Any], U: np.ndarray):
         pass
 
-class ApproximateValueIteration(ApproximateSolutionMethod):
+class ApproximateValueIteration(OfflinePlanningMethod):
     def __init__(self, init_U_theta: ApproximateValueFunction, S: list[Any], k_max: int):
         self.init_U_theta = init_U_theta # initial parameterized value function that supports fit
         self.S = S # set of discrete states for performing backups
         self.k_max = k_max # maximum number of iterations
 
-    def solve(self, P: MDP):
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         U_theta = self.init_U_theta.copy() # TODO - Test depth of this copy
         for _ in range(self.k_max):
             U = np.array([P.backup(U_theta, s) for s in self.S])

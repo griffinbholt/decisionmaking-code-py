@@ -109,14 +109,14 @@ class GibbsSampling(DiscreteInferenceMethod):
     @staticmethod
     def gibbs_sample(a: Assignment, bn: BayesianNetwork, evidence: Assignment, ordering: list[int], m: int):
         for _ in range(m):
-            self.update_gibbs_sample(a, bn, evidence, ordering)
+            GibbsSampling.update_gibbs_sample(a, bn, evidence, ordering)
 
     @staticmethod
     def update_gibbs_sample(a: Assignment, bn: BayesianNetwork, evidence: Assignment, ordering: list[int]):
         for i in ordering:
             name = bn.variables[i].name
             if name not in evidence:
-                b = self.blanket(bn, a, i)
+                b = GibbsSampling.blanket(bn, a, i)
                 a[name] = b.sample()[name]
 
     @staticmethod

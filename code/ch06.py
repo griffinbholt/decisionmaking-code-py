@@ -13,7 +13,7 @@ class SimpleProblem():
 
 def solve(P: SimpleProblem, evidence: Assignment, M: DiscreteInferenceMethod) -> tuple[Assignment, float]:
     query = [var.name for var in P.utility_vars]
-    U = lambda a: np.sum([P.utilities[name][a[uname]] for uname in query])
+    U = lambda a: np.sum([P.utilities[uname][a[uname]] for uname in query])
     best_a, best_u = None, -np.inf
     for assignment in assignments(P.decision_vars):
         evidence = Assignment(evidence | assignment)

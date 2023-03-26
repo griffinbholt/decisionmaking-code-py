@@ -42,4 +42,4 @@ def gaussian_kernel(b: float) -> Callable: # TODO - Type hint for return
     return lambda x: norm.pdf(x, loc=0, scale=b)
 
 def kernel_density_estimate(kernel: Callable, observations: np.ndarray) -> Callable:
-    return lambda x: np.mean(kernel(x - o)) # TODO - test broadcasting
+    return lambda x: np.mean(kernel(x - o) for o in observations) # TODO - test broadcasting

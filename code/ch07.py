@@ -56,19 +56,22 @@ class ValueFunctionPolicy():
         return self.P.greedy(self.U, s)[0]
 
 class SolutionMethod(ABC):
+    pass
+
+class OfflinePlanningMethod(SolutionMethod):
     @abstractmethod
-    def solve(P: MDP) -> Callable[[Any], Any]:
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         pass
 
-class ExactSolutionMethod(SolutionMethod):
+class ExactSolutionMethod(OfflinePlanningMethod):
     pass
 
 class PolicyIteration(ExactSolutionMethod):
     def __init__(self, initial_policy: Callable[[Any], Any], k_max: int):
-        self.initial_policy = policy
+        self.initial_policy = initial_policy
         self.k_max = k_max
 
-    def solve(P: MDP) -> Callable[[Any], Any]:
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         policy = self.initial_policy
         for _ in range(self.k_max):
             U = P.policy_evaluation(policy)
@@ -82,7 +85,7 @@ class ValueIteration(ExactSolutionMethod):
     def __init__(self, k_max: int):
         self.k_max = k_max
 
-    def solve(P: MDP) -> Callable[[Any], Any]:
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         U = np.zeros(len(P.S))
         for _ in range(self.k_max):
             U = np.array([P.backup(U, s) for s in P.S])
@@ -92,7 +95,7 @@ class GaussSeidelValueIteration(ExactSolutionMethod):
     def __init__(self, k_max: int):
         self.k_max = k_max
 
-    def solve(P: MDP) -> Callable[[Any], Any]:
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         U = np.zeros(len(P.S))
         for _ in range(self.k_max):
             for i, s in enumerate(P.S):
@@ -100,7 +103,7 @@ class GaussSeidelValueIteration(ExactSolutionMethod):
         return ValueFunctionPolicy(P, U)
 
 class LinearProgramFormulation(ExactSolutionMethod):
-    def solve(P: MDP) -> Callable[[Any], Any]:
+    def solve(self, P: MDP) -> Callable[[Any], Any]:
         S, A, R, T = self.numpyform(P)
         U = cp.Variable(len(S))
         objective = cp.Maximize(cp.sum(U))
