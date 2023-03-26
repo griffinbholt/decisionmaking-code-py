@@ -1,5 +1,5 @@
 import pytest
-import sys; sys.path.append('../../')
+import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from ch02 import Variable
 
