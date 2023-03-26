@@ -1,7 +1,6 @@
 import itertools
 import networkx as nx
 import numpy as np
-
 from functools import reduce
 
 class Variable():
@@ -73,7 +72,7 @@ class Factor():
     def in_scope(self, name: str) -> bool:
         return any([name == var.name for var in self.variables])
 
-    def sample(self) -> 'Assignment':
+    def sample(self) -> Assignment:
         total, p, w = 0.0, np.random.rand(), sum(self.table.values())
         for a, v in self.table.items():
             total += v/w
@@ -88,6 +87,11 @@ class Factor():
 def assignments(variables: list[Variable]) -> list[Assignment]:
     names = [var.name for var in variables]
     return [Assignment(zip(names, values)) for values in itertools.product(*[[i for i in range(var.r)] for var in variables])]
+
+# Note: Although `marginalize`, `condition_single`, and `condition_multiple` are
+# all defined in Chapter 3, the `BayesianNetwork.sample()` function depends on `condition_multiple`.
+# To import `condition_multiple` would create a circular import issue. Thus, these functions are included
+# in the ch02 code module, but can still be displayed in Chapter 3 of the textbook.
 
 def marginalize(phi: Factor, name: str) -> Factor:
     table = FactorTable()
@@ -126,7 +130,7 @@ class BayesianNetwork():
         prob = lambda phi : [phi.table.get(a, default_val=0.0) for a in subassignment(phi)]
         return np.prod([prob(phi) for phi in self.factors])
 
-    def sample(self) -> 'Assignment':
+    def sample(self) -> Assignment:
         a = Assignment()
         for i in list(nx.topological_sort(self.graph)):
             name, phi = self.variables[i].name, self.factors[i]

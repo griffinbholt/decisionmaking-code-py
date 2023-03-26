@@ -52,7 +52,6 @@ class K2Search(DirectedGraphSearchMethod):
                     break
         return graph
 
-
 class LocalDirectedGraphSearch(DirectedGraphSearchMethod):
     def __init__(self, initial_graph: nx.DiGraph, k_max: int):
         self.initial_graph = initial_graph
