@@ -22,13 +22,13 @@ def example_3_1():
 
 # Example 3.2: Factor Marginalization
 def example_3_2():
-    phi_1 = ex_2_3()
+    phi_1 = example_2_3()
     phi_2 = marginalize(phi_1, "y")
     return phi_2
 
 # Example 3.3: Factor Conditioning
 def example_3_3():
-    phi_1 = ex_2_3()
+    phi_1 = example_2_3()
     phi_2 = condition_single(phi_1, name="y", value=1)
     return phi_2
 
@@ -37,7 +37,7 @@ def example_3_3():
 # and will be different than those in the textbook
 # I also changed the number of samples from 10 to 1000 to make it more interesting
 def example_3_5():
-    bn = ex_2_5()
+    bn = example_2_5()
     query = ["b"]
     evidence = Assignment({"d": 1, "c": 1})
     M = DirectSampling(m=1000)
@@ -49,7 +49,7 @@ def example_3_5():
 # and will be different than those in the textbook.
 # I also changed the number of samples from 5 to 1000 to make it more interesting
 def example_3_6():
-    bn = ex_2_5()
+    bn = example_2_5()
     query = ["b"]
     evidence = Assignment({"d": 1, "c": 1})
     M = LikelihoodWeightedSampling(m=1000)
