@@ -23,7 +23,7 @@ class ApproximateValueIteration(ApproximateSolutionMethod):
         self.S = S # set of discrete states for performing backups
         self.k_max = k_max # maximum number of iterations
 
-    def solve(P: MDP):
+    def solve(self, P: MDP):
         U_theta = self.init_U_theta.copy() # TODO - Test depth of this copy
         for _ in range(self.k_max):
             U = np.array([P.backup(U_theta, s) for s in self.S])
