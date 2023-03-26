@@ -23,12 +23,12 @@ class MonteCarloPolicyEvaluation():
 
 class PolicySearchMethod(SolutionMethod):
     @abstractmethod
-    def optimize(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> np.ndarray:
+    def optimize(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> np.ndarray:
         pass
 
 class SearchDistributionMethod(SolutionMethod):
     @abstractmethod
-    def optimize_dist(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> rv_continuous:
+    def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> rv_continuous:
         pass
 
 class HookeJeevesPolicySearch(PolicySearchMethod):
@@ -38,7 +38,7 @@ class HookeJeevesPolicySearch(PolicySearchMethod):
         c = self.c # step size reduction factor
         epsilon = self.epsilon # termination step size
 
-    def optimize(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> np.ndarray:
+    def optimize(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> np.ndarray:
         theta, theta_prime = self.theta.copy(), np.zeros(self.theta.shape)
         u, n = U(policy, theta), len(theta)
         while self.alpha > self.epsilon:
@@ -65,7 +65,7 @@ class GeneticPolicySearch(PolicySearchMethod):
         self.m_elite = m_elite # number of elite samples
         self.k_max = k_max # number of iterations
 
-    def optimize(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> np.ndarray:
+    def optimize(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> np.ndarray:
         thetas = self.thetas.copy()
         n, m = len(thetas[0]), len(thetas)
         for k in range(self.k_max):
@@ -91,7 +91,7 @@ class CrossEntropyPolicySearch(SearchDistributionMethod, PolicySearchMethod):
         self.m_elite = m_elite # number of elite samples
         self.k_max = k_max # number of iterations
 
-    def optimize_dist(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> multivariate_normal:
+    def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> multivariate_normal:
         p = self.p 
         for _ in range(self.k_max):
             thetas = p.rvs(self.m)
@@ -100,7 +100,7 @@ class CrossEntropyPolicySearch(SearchDistributionMethod, PolicySearchMethod):
             p = multivariate_normal(np.mean(theta_elite, axis=0), np.cov(theta_elite, rowvar=0))
         return p
 
-    def optimize(self, policy: Callable[[np.ndarray, Any]], U: MonteCarloPolicyEvaluation) -> np.ndarray:
+    def optimize(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> np.ndarray:
         return self.optimize_dist(policy, U).mean
 
 class EvolutionStrategies(SearchDistributionMethod):

@@ -107,10 +107,10 @@ class MonteCarloTreeSearch(OnlinePlanningMethod):
 
     def __call__(self, s: Any) -> Any:
         for _ in range(self.m):
-            self.simulate(s)
+            self.simulate(s, d=self.d)
         return self.P.A[np.argmax([self.Q[(s, a)] for a in self.P.A])]
 
-    def simulate(self, s: Any, d: int=self.d):
+    def simulate(self, s: Any, d: int):
         if d <= 0:
             return self.U(s)
         if (s, self.P.A[0]) not in self.N:
@@ -134,6 +134,7 @@ class MonteCarloTreeSearch(OnlinePlanningMethod):
     def bonus(Nsa: int, Ns: int) -> float:
         return np.inf if Nsa == 0 else np.sqrt(np.log(Ns)/Nsa)
 
+
 class HeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, m: int):
         self.P = P # problem
@@ -153,7 +154,7 @@ class HeuristicSearch(OnlinePlanningMethod):
             U[s] = u 
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in S])
 
-class LabeledHeuristicSearch(OnlinePlanningMethod): # TODO - This whole algorithm needs testing
+class LabeledHeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, delta: float):
         self.P = P # problem 
         self.U_hi = U_hi # upper bound on value function
@@ -176,7 +177,7 @@ class LabeledHeuristicSearch(OnlinePlanningMethod): # TODO - This whole algorith
             U[s] = u 
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in S])
         while len(visited) != 0:
-            if self.label(U, solved, visited.pop())
+            if self.label(U, solved, visited.pop()):
                 break
         
     def label(self, U: np.ndarray, solved: set[int] | set[np.ndarray], s: int | np.ndarray):
@@ -190,7 +191,7 @@ class LabeledHeuristicSearch(OnlinePlanningMethod): # TODO - This whole algorith
             solved = solved.union(envelope)
         return found
 
-    def expand(self, U: np.ndarray, solved: set[int] | set[np.ndarray], s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarrau]]:
+    def expand(self, U: np.ndarray, solved: set[int] | set[np.ndarray], s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
         found, to_expand, envelope = False, {s}, []
         while len(to_expand) != 0:
             s = to_expand.pop() # TODO - set.pop() removes a random element, whereas it is unknown what Julia's pop!(set) removes
