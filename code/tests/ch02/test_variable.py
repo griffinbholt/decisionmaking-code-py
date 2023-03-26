@@ -6,5 +6,5 @@ from ch02 import Variable
 class TestVariable():
     variable = Variable("x", 2)
 
-    def test_string_representation():
+    def test_string_representation(self):
         assert str(self.variable) == "(x, 2)"
