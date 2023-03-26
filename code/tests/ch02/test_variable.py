@@ -1,4 +1,7 @@
 import pytest
+import sys; sys.path.append('../../')
+
+from ch02 import Variable
 
 class TestVariable():
     variable = Variable("x", 2)
