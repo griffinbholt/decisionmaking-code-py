@@ -18,7 +18,7 @@ class ApproximateValueFunction(ABC):
         pass
 
 class ApproximateValueIteration(ApproximateSolutionMethod):
-    def __init__(self, U_theta: ApproximateValueFunction, S: list[Any], k_max: int):
+    def __init__(self, init_U_theta: ApproximateValueFunction, S: list[Any], k_max: int):
         self.init_U_theta = init_U_theta # initial parameterized value function that supports fit
         self.S = S # set of discrete states for performing backups
         self.k_max = k_max # maximum number of iterations
