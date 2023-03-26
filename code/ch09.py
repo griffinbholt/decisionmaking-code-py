@@ -152,7 +152,7 @@ class HeuristicSearch(OnlinePlanningMethod):
         for _ in range(self.d):
             a, u = self.P.greedy(U, s)
             U[s] = u 
-            s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in S])
+            s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
 
 class LabeledHeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, delta: float):
