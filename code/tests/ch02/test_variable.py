@@ -7,4 +7,4 @@ class TestVariable():
     variable = Variable("x", 2)
 
     def test_string_representation():
-        assert str(variable) == "(x, 2)"
+        assert str(self.variable) == "(x, 2)"
