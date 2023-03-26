@@ -27,7 +27,7 @@ class ApproximateValueIteration(ApproximateSolutionMethod):
         U_theta = self.init_U_theta.copy() # TODO - Test depth of this copy
         for _ in range(self.k_max):
             U = np.array([P.backup(U_theta, s) for s in self.S])
-            U_theta.fit(S, U)
+            U_theta.fit(self.S, U)
         return ValueFunctionPolicy(P, U_theta)
 
 class NearestNeighborValueFunction(ApproximateValueFunction):
