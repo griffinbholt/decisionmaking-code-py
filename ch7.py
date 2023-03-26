@@ -39,10 +39,13 @@ class MDP():
     def greedy(self, U: Callable[[Any], float] | np.ndarray, s: Any) -> tuple[float, Any]:
         expected_rewards = [self.lookahead(U, s, a) for a in self.A]
         idx = np.argmax(expected_rewards)
-        return expected_rewards[idx], self.A[idx]
+        return self.A[idx], expected_rewards[idx]
 
     def backup(self, U: Callable[[Any], float] | np.ndarray, s: Any) -> float:
         return np.max([self.lookahead(U, s, a) for a in self.A])
+
+    def randstep(self, s: Any, a: Any):
+        return self.TR(s, a)
 
 class ValueFunctionPolicy():
     def __init__(self, P: MDP, U: Callable[[Any], float] | np.ndarray):
@@ -50,7 +53,7 @@ class ValueFunctionPolicy():
         self.U = U # utility function
 
     def __call__(self, s: Any) -> Any:
-        return self.P.greedy(self.U, s)[1]
+        return self.P.greedy(self.U, s)[0]
 
 class SolutionMethod(ABC):
     @abstractmethod
