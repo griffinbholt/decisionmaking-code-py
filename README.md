@@ -1,3 +1,5 @@
+![example workflow](https://github.com/griffinbholt/decisionmaking-code-py/blob/main/.github/workflows/python-package.yml/badge.svg)
+
 # decisionmaking-code-py
 
 *Original Julia Code by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
