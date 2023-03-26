@@ -2,9 +2,9 @@ import numpy as np
 import sys; sys.path.append('../')
 from scipy.stats import multivariate_normal
 
-from ch2 import Variable, Assignment, FactorTable, Factor, marginalize, condition_single
-from ch3 import DirectSampling, LikelihoodWeightedSampling, MultivariateGaussianInference
-from ch2_examples import example_2_3, example_2_5
+from ch02 import Variable, Assignment, FactorTable, Factor, marginalize, condition_single
+from ch03 import DirectSampling, LikelihoodWeightedSampling, MultivariateGaussianInference
+from ch02_examples import example_2_3, example_2_5
 
 # Example 3.1: The Factor Product
 def example_3_1():

@@ -1,7 +1,7 @@
 import numpy as np
 
-from ch2 import Variable, Assignment, BayesianNetwork, assignments
-from ch3 import DiscreteInferenceMethod
+from ch02 import Variable, Assignment, BayesianNetwork, assignments
+from ch03 import DiscreteInferenceMethod
 
 class SimpleProblem():
     def __init__(self, bn: BayesianNetwork, chance_vars: list[Variable], decision_vars: list[Variable], utility_vars: list[Variable], utilities: dict[str, np.ndarray]):

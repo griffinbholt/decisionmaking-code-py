@@ -2,7 +2,7 @@ import numpy as np
 import sys; sys.path.append('../')
 from scipy.stats import multivariate_normal
 
-from ch3 import MultivariateGaussianInference
+from ch03 import MultivariateGaussianInference
 
 # Exercise 3.7: Multivariate Gaussian Inference for Test Scores
 def exercise_3_7():

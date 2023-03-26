@@ -4,8 +4,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 from scipy.stats import multivariate_normal
 
-from ch2 import Assignment, Factor, FactorTable, BayesianNetwork
-from ch2 import marginalize, condition_multiple
+from ch02 import Assignment, Factor, FactorTable, BayesianNetwork
+from ch02 import marginalize, condition_multiple
 
 class InferenceMethod(ABC):
     @abstractmethod

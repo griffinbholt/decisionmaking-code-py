@@ -1,7 +1,7 @@
 import networkx as nx
 import sys; sys.path.append('../')
 
-from ch2 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
+from ch02 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
 
 # Example 2.3: Constructing a discrete factor
 def example_2_3():

@@ -5,8 +5,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 from scipy.special import loggamma
 
-from ch2 import Variable
-from ch4 import statistics, prior
+from ch02 import Variable
+from ch04 import statistics, prior
 
 def bayesian_score_component(M: np.ndarray, alpha: np.ndarray) -> float:
     alpha_0 = np.sum(alpha, axis=1)

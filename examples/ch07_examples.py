@@ -1,7 +1,7 @@
 import numpy as np
 import sys; sys.path.append('../')
 
-from ch7 import LinearQuadraticProblem
+from ch07 import LinearQuadraticProblem
 
 # Example 7.4: Solving a finite horizon MDP with linear transition function & quadratic award
 def example_7_4():

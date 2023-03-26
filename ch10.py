@@ -4,8 +4,8 @@ from abc import abstractmethod
 from typing import Any, Callable, Type
 from scipy.stats import rv_continuous, multivariate_normal
 
-from ch7 import MDP, SolutionMethod
-from ch9 import rollout
+from ch07 import MDP, SolutionMethod
+from ch09 import rollout
 
 class MonteCarloPolicyEvaluation():
     def __init__(self, P: MDP, b: np.ndarray, d: int, m: int):

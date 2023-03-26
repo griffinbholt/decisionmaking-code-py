@@ -2,8 +2,8 @@ import networkx as nx
 import numpy as np
 import sys; sys.path.append('../')
 
-from ch2 import Variable
-from ch4 import statistics, prior
+from ch02 import Variable
+from ch04 import statistics, prior
 
 # Example 4.1: Extracting statistics from a data set
 # Note: np.ravel_multi_index indexes the parental instantiations differently than sub2ind 

@@ -4,7 +4,7 @@ import numpy as np
 from scipy.stats import norm
 from typing import Callable
 
-from ch2 import Variable
+from ch02 import Variable
 
 """
 A function for extracting the statistics, or counts, from a discrete data set `data`, 

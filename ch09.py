@@ -3,7 +3,7 @@ import numpy as np
 from abc import abstractmethod
 from typing import Any, Callable
 
-from ch7 import MDP, SolutionMethod
+from ch07 import MDP, SolutionMethod
 
 class OnlinePlanningMethod(SolutionMethod):
     @abstractmethod
