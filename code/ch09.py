@@ -34,7 +34,7 @@ def forward_search(P: MDP, s: Any, d: int, U: Callable[[Any], float]) -> tuple[A
     best = (None, -np.inf)  # TODO - Decide if split up or not
     U_prime = lambda s: (forward_search(P, s, d - 1, U))[1]
     for a in P.A:
-        u = lookahead(P, U_prime, s, a)
+        u = P.lookahead(U_prime, s, a)
         if u > best[1]:
             best = (a, u)
     return best
