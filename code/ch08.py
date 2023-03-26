@@ -3,7 +3,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
-from ch07 import MDP, SolutionMethod, ValueFunctionPolicy
+from ch07 import MDP, OfflinePlanningMethod, ValueFunctionPolicy
 
 class ApproximateValueFunction(ABC):
     @abstractmethod
