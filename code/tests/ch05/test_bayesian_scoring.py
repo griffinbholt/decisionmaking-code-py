@@ -1,6 +1,5 @@
 import networkx as nx
 import numpy as np
-import os
 import pandas as pd
 import pytest
 import sys; sys.path.append('./code/')

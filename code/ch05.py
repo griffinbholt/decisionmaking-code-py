@@ -62,7 +62,7 @@ class LocalDirectedGraphSearch(DirectedGraphSearchMethod):
         y = bayesian_score(variables, graph, data)
         for k in range(self.k_max):
             graph_prime = self.rand_graph_neighbor(graph)
-            y_prime = bayesian_score(variables, graph_prime, data) if len(nx.simple_cycles(graph_prime)) == 0 else -np.inf
+            y_prime = bayesian_score(variables, graph_prime, data) if len(list(nx.simple_cycles(graph_prime))) == 0 else -np.inf
             if y_prime > y:
                 y, graph = y_prime, graph_prime
         return graph
