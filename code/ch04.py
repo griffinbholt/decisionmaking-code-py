@@ -38,8 +38,8 @@ def prior(variables: list[Variable], graph: nx.DiGraph) -> list[np.ndarray]:
     q = np.array([int(np.prod([r[j] for j in graph.predecessors(i)])) for i in range(n)])
     return [np.ones((q[i], r[i])) for i in range(n)]
 
-def gaussian_kernel(b: float) -> Callable: # TODO - Type hint for return
+def gaussian_kernel(b: float) -> Callable[[float], float]:
     return lambda x: norm.pdf(x, loc=0, scale=b)
 
-def kernel_density_estimate(kernel: Callable, observations: np.ndarray) -> Callable:
-    return lambda x: np.mean(kernel(x - o) for o in observations) # TODO - test broadcasting
+def kernel_density_estimate(kernel: Callable[[float | np.ndarray], float], observations: np.ndarray) -> Callable:
+    return lambda x: np.mean([kernel(x - o) for o in observations])
