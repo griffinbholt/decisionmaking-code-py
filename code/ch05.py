@@ -86,9 +86,9 @@ def are_markov_equivalent(G: nx.DiGraph, H: nx.DiGraph) -> bool:
        return False
     for (I, J) in [(G, H), (H, G)]:
         for c in range(I.number_of_nodes()):
-            parents = list(I.predecessors[c])
+            parents = list(I.predecessors(c))
             for a, b in itertools.combinations(parents, 2):
                 if (not I.has_edge(a, b)) and (not I.has_edge(b, a)) and\
-                   (not J.has_edge(a, c)) and (not J.has_edge(b, c)):
+                   not (J.has_edge(a, c) and J.has_edge(b, c)):
                    return False
     return True
