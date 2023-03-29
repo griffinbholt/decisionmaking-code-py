@@ -127,7 +127,7 @@ class BayesianNetwork():
 
     def probability(self, assignment: Assignment) -> float:
         subassignment = lambda phi : assignment.select(phi.variable_names)
-        prob = lambda phi : [phi.table.get(a, default_val=0.0) for a in subassignment(phi)]
+        prob = lambda phi : phi.table.get(subassignment(phi), default_val=0.0)
         return np.prod([prob(phi) for phi in self.factors])
 
     def sample(self) -> Assignment:

@@ -35,7 +35,7 @@ class VariableElimination(DiscreteInferenceMethod):
         for i in self.ordering:
             name = bn.variables[i].name
             if name not in query:
-                indices = [phi for phi in bn.factors if phi.in_scope(name)]
+                indices = [j for j in range(len(factors)) if factors[j].in_scope(name)]
                 if len(indices) != 0:
                     phi = Factor.prod([factors[j] for j in indices])
                     for j in sorted(indices, reverse=True):
@@ -54,7 +54,6 @@ class DirectSampling(DiscreteInferenceMethod):
         table = FactorTable()
         for _ in range(self.m):
             a = bn.sample()
-            print(a)
             if all(a[k] == v for k,v in evidence.items()):
                 b = a.select(query)
                 table[b] = table.get(b, default_val=0.0) + 1
@@ -96,7 +95,7 @@ class GibbsSampling(DiscreteInferenceMethod):
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
         table = FactorTable()
         a = Assignment(bn.sample() | evidence)
-        a.gibbs_sample(bn, evidence, self.ordering, self.m_burnin)
+        self.gibbs_sample(a, bn, evidence, self.ordering, self.m_burnin)
         for i in range(self.m_samples):
             self.gibbs_sample(a, bn, evidence, self.ordering, self.m_skip)
             b = a.select(query)
