@@ -133,10 +133,8 @@ class LinearQuadraticProblem():
     def solve(self) -> list[np.ndarray]:# -> list[Callable[[np.ndarray], np.ndarray]]:
         V = np.zeros(self.Rs.shape)
         policies = [lambda s: np.zeros(self.Ta.shape[1])]
-        # policies = [np.zeros((self.Ta.shape[1], self.Ta.shape[0]))]
         for _ in range(1, self.h_max):
             V = self.Ts.T @ (V - V @ self.Ta @ (np.linalg.inv(self.Ta.T @ V @ self.Ta + self.Ra) @ (self.Ta.T @ V))) @ self.Ts + self.Rs # TODO - Check math
             L = -np.linalg.inv(self.Ta.T @ V @ self.Ta + self.Ra) @ self.Ta.T @ V @ self.Ts # TODO - Check math
-            policies.append(lambda s: L @ s)
-            # policies.append(L)
+            policies.append(lambda s, L=L: L @ s)
         return policies

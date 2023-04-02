@@ -8,6 +8,8 @@ from ch03 import ExactInference
 from ch06 import SimpleProblem
 
 class TestSimpleProblemMethods():
+    # This Decision Network is taken from Example 6.4 in the textbook
+    # The probability tables were made up for this test
     T = Variable("T", 2) # Node 0
     D = Variable("D", 2) # Node 1
     U = Variable("U", 3) # Node 2
