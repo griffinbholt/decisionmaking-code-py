@@ -11,7 +11,7 @@ class MDP():
                  A: list[Any], 
                  T: Callable[[Any, Any, Any], float], 
                  R: Callable[[Any, Any], float], 
-                 TR: Callable[[Any, Any], tuple[Any, float]]): # TODO - Typing - what are the states and actions?
+                 TR: Callable[[Any, Any], tuple[Any, float]]):
         self.gamma = gamma # discount factor
         self.S = S # state space
         self.A = A # action space
@@ -31,8 +31,8 @@ class MDP():
         return U
 
     def policy_evaluation(self, policy: Callable[[Any], Any]) -> np.ndarray:
-        R_prime = np.ndarray([self.R(s, policy(s)) for s in self.S])
-        T_prime = np.ndarray([[self.T(s, policy(s), s_prime) for s_prime in self.S] for s in self.S])
+        R_prime = np.array([self.R(s, policy(s)) for s in self.S])
+        T_prime = np.array([[self.T(s, policy(s), s_prime) for s_prime in self.S] for s in self.S])
         I = np.eye(len(self.S))
         return np.linalg.solve(I - self.gamma * T_prime, R_prime)
 
@@ -44,7 +44,7 @@ class MDP():
     def backup(self, U: Callable[[Any], float] | np.ndarray, s: Any) -> float:
         return np.max([self.lookahead(U, s, a) for a in self.A])
 
-    def randstep(self, s: Any, a: Any):
+    def randstep(self, s: Any, a: Any) -> tuple[Any, float]:
         return self.TR(s, a)
 
 class ValueFunctionPolicy():
