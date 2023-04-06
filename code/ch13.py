@@ -1,14 +1,14 @@
-import numpy as np 
+import numpy as np
 
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
-from ch07 import MDP 
+from ch07 import MDP
 
 
 class ActorCriticMethod(ABC):
     @abstractmethod
-    def gradient(self, policy: Callable[[np.ndarray, Any], Any], 
+    def gradient(self, policy: Callable[[np.ndarray, Any], Any],
                  theta: np.ndarray, phi: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         pass
 
