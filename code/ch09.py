@@ -5,10 +5,12 @@ from typing import Any, Callable
 
 from ch07 import MDP, SolutionMethod
 
+
 class OnlinePlanningMethod(SolutionMethod):
     @abstractmethod
     def __call__(self, s: Any) -> Any:
         pass
+
 
 def rollout(P: MDP, s: Any, policy: Callable[[Any], Any], d: int) -> float:
     ret = 0.0
@@ -18,58 +20,66 @@ def rollout(P: MDP, s: Any, policy: Callable[[Any], Any], d: int) -> float:
         ret += P.gamma**(t - 1) * r
     return ret
 
+
 class RolloutLookahead(OnlinePlanningMethod):
     def __init__(self, P: MDP, policy: Callable[[Any], Any], d: int):
-        self.P = P # problem
-        self.policy = policy # rollout policy
-        self.d = d # depth
+        self.P = P            # problem
+        self.policy = policy  # rollout policy
+        self.d = d            # depth
 
     def __call__(self, s: Any) -> Any:
-        U = lambda s: rollout(self.P, s, self.policy, self.d)
+        def U(s: Any): return rollout(self.P, s, self.policy, self.d)
         return (self.P.greedy(U, s))[0]
+
 
 def forward_search(P: MDP, s: Any, d: int, U: Callable[[Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U(s))
     best = (None, -np.inf)  # TODO - Decide if split up or not
-    U_prime = lambda s: (forward_search(P, s, d - 1, U))[1]
+    def U_prime(s: Any): return (forward_search(P, s, d - 1, U))[1]
     for a in P.A:
         u = P.lookahead(U_prime, s, a)
         if u > best[1]:
             best = (a, u)
     return best
 
+
 class ForwardSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, d: int, U: Callable[[Any], float]):
-        self.P = P # problem
-        self.d = d # depth
-        self.U = U # value function at depth d
+        self.P = P  # problem
+        self.d = d  # depth
+        self.U = U  # value function at depth d
 
     def __call__(self, s: Any) -> Any:
         return (forward_search(self.P, s, self.d, self.U))[0]
 
-def branch_and_bound(P: MDP, s: Any, d: int, U_lo: Callable[[Any], float], Q_hi: Callable[[Any, Any], float]) -> tuple[Any, float]:
+
+def branch_and_bound(P: MDP, s: Any, d: int, 
+                     U_lo: Callable[[Any], float], 
+                     Q_hi: Callable[[Any, Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U_lo(s))
-    U_prime = lambda s: branch_and_bound(P, s, d - 1, U_lo, Q_hi)
-    best = (None, -np.inf) # TODO - Decide if split up or not
+    def U_prime(s: Any): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
+    best = (None, -np.inf)  # TODO - Decide if split up or not
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
         if Q_hi(s, a) < best[1]:
-            return best # safe to prune
+            return best  # safe to prune
         u = P.lookahead(U_prime, s, a)
         if u > best[1]:
             best = (a, u)
     return best
 
+
 class BranchAndBound(OnlinePlanningMethod):
     def __init__(self, P: MDP, d: int, U_lo: Callable[[Any], float], Q_hi: Callable[[Any, Any], float]):
-        self.P = P # problem
-        self.d = d # depth
-        self.U_lo = U_lo # lower bound on value function at depth d
-        self.Q_hi = Q_hi # upper bound on action value function
+        self.P = P        # problem
+        self.d = d        # depth
+        self.U_lo = U_lo  # lower bound on value function at depth d
+        self.Q_hi = Q_hi  # upper bound on action value function
 
     def __call__(self, s: Any) -> Any:
         return (branch_and_bound(self.P, s, self.d, self.U_lo, self.Q_hi))[0]
+
 
 def sparse_sampling(P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
     if d <= 0:
@@ -85,25 +95,34 @@ def sparse_sampling(P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
             best = (a, u)
     return best
 
+
 class SparseSampling(OnlinePlanningMethod):
     def __init__(self, P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
-        self.P = P # problem
-        self.d = d # depth
-        self.m = m # number of samples
-        self.U = U # value function at depth d
+        self.P = P  # problem
+        self.d = d  # depth
+        self.m = m  # number of samples
+        self.U = U  # value function at depth d
 
     def __call__(self, s: Any) -> Any:
         return (sparse_sampling(self.P, s, self.d, self.m, self.U))[0]
 
+
 class MonteCarloTreeSearch(OnlinePlanningMethod):
-    def __init__(self, P: MDP, N: dict[tuple[Any, Any], int], Q: dict[tuple[Any, Any], float], d: int, m: int, c: float, U: Callable[[Any], float]):
-        self.P = P # problem
-        self.N = N # visit counts
-        self.Q = Q # action value estimates
-        self.d = d # depth
-        self.m = m # number of simulations
-        self.c = c # exploration constant
-        self.U = U # value function estimate
+    def __init__(self,
+                 P: MDP,
+                 N: dict[tuple[Any, Any], int],
+                 Q: dict[tuple[Any, Any], float],
+                 d: int,
+                 m: int,
+                 c: float,
+                 U: Callable[[Any], float]):
+        self.P = P  # problem
+        self.N = N  # visit counts
+        self.Q = Q  # action value estimates
+        self.d = d  # depth
+        self.m = m  # number of simulations
+        self.c = c  # exploration constant
+        self.U = U  # value function estimate
 
     def __call__(self, s: Any) -> Any:
         for _ in range(self.m):
@@ -137,10 +156,10 @@ class MonteCarloTreeSearch(OnlinePlanningMethod):
 
 class HeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, m: int):
-        self.P = P # problem
-        self.U_hi = U_hi # upper bound on value function
-        self.d = d # depth
-        self.m = m # number of simulations
+        self.P = P        # problem
+        self.U_hi = U_hi  # upper bound on value function
+        self.d = d        # depth
+        self.m = m        # number of simulations
 
     def __call__(self, s: int | np.ndarray) -> Any:
         U = np.array([self.U_hi(s) for s in self.P.S])
@@ -154,12 +173,13 @@ class HeuristicSearch(OnlinePlanningMethod):
             U[s] = u 
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
 
+
 class LabeledHeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, delta: float):
-        self.P = P # problem 
-        self.U_hi = U_hi # upper bound on value function
-        self.d = d # depth
-        self.delta = delta # gap threshold
+        self.P = P          # problem 
+        self.U_hi = U_hi    # upper bound on value function
+        self.d = d          # depth
+        self.delta = delta  # gap threshold
 
     def __call__(self, s: int | np.ndarray) -> Any:
         U, solved = np.array([self.U_hi(s) for s in self.P.S]), set() 
@@ -191,7 +211,8 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
             solved = solved.union(envelope)
         return found
 
-    def expand(self, U: np.ndarray, solved: set[int] | set[np.ndarray], s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
+    def expand(self, U: np.ndarray, solved: set[int] | set[np.ndarray],
+               s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
         found, to_expand, envelope = False, {s}, []
         while len(to_expand) != 0:
             s = to_expand.pop() # TODO - set.pop() removes a random element, whereas it is unknown what Julia's pop!(set) removes
@@ -204,4 +225,3 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
                     if (self.P.T(s, a, s_prime) > 0) and (s_prime not in solved.union(envelope)):
                         to_expand.add(s_prime)
         return found, envelope
-    
