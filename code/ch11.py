@@ -26,6 +26,7 @@ class FiniteDifferenceGradient(PolicyGradientEstimationMethod):
         n = len(theta)
         def delta_theta(i): np.array([self.delta if i == k else 0.0 for k in range(n)])
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
+        
         def U(theta_prime):  # TODO - Rethink naming conventions
             def pi(s): return policy(theta_prime, s)
             def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
@@ -45,6 +46,7 @@ class RegressionGradient(PolicyGradientEstimationMethod):
     def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray) -> np.ndarray:
         delta_theta = self.delta * normalize(np.randn(self.m, len(theta)), ord=2, axis=1, keepdims=True)
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
+
         def U(theta_prime):  # TODO - Rethink naming conventions
             def pi(s): return policy(theta_prime, s)
             def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
