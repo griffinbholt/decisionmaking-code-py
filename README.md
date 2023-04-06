@@ -17,21 +17,21 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 ## Progress Update: (6 Apr 2023)
 
 | Chapter(s) | Written | Tested | Notes |
-|--:|--:|--:|:--|
-| 1-6 | 100% | 100% | **Ready for use** |
-| 7 | 100% | 50% | All exact solution methods need to be tested |
-| 8 | 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
-| 9 | 99% | 0% | Just need to make a few syntactic decisions |
-| 10 | 67% | 0% | `EvolutionStrategies` and `IsotropicEvolutionStrategies` need to be written |
-| 11 | 99% | 0% | Just need to make a few syntactic decisions |
-| 12 | 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
+|--:|:--|:--|:--|
+| 1-6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌ 50% | All exact solution methods need to be tested |
+| 8 | ▌▌▌▌▌▌▌ 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
+| 9 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
+| 10 | ▌▌▌▌▌▌▌ 67% | 0% | `EvolutionStrategies` and `IsotropicEvolutionStrategies` need to be written |
+| 11 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
+| 12 | ▌▌▌▌▌ 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
 | 13 | 0% | 0% | Skipped for now; coming back to it later |
-| 14 | 100% | 0% | Needs to be tested |
-| 15 | 90% | 0% | Just need to write the `simulate` method from the end of the chapter |
-| 16 | 100% | 0% | Needs to be tested |
-| 17 | 100% | 0% | Needs to be tested |
-| 18 | 70% | 0% | `MaximumEntropyIRL` needs to be written |
-| 19 | 25% | 0% | I have only written `DiscreteStateFilter` and `KalmanFilter` |
+| 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 15 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Just need to write the `simulate` method from the end of the chapter |
+| 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 18 | ▌▌▌▌▌▌▌ 70% | 0% | `MaximumEntropyIRL` needs to be written |
+| 19 | ▌▌▌ 25% | 0% | I have only written `DiscreteStateFilter` and `KalmanFilter` |
 | 20-27 | 0% | 0% | Nothing written |
 
 I have also written code for pertinent examples and exercises through Chapter 7.
