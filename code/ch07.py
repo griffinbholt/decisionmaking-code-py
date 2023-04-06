@@ -9,7 +9,7 @@ class MDP():
                  gamma: float, 
                  S: list[Any], 
                  A: list[Any], 
-                 T: Callable[[Any, Any, Any], float], 
+                 T: Callable[[Any, Any, Any], float],
                  R: Callable[[Any, Any], float], 
                  TR: Callable[[Any, Any], tuple[Any, float]]):
         self.gamma = gamma # discount factor
@@ -46,6 +46,16 @@ class MDP():
 
     def randstep(self, s: Any, a: Any) -> tuple[Any, float]:
         return self.TR(s, a)
+
+    # TODO - Create test
+    def simulate(self, s: Any, policy: Callable[[Any], Any], d: int) -> list[tuple[Any, Any, float]]:
+        trajectory = []
+        for _ in range(d):
+            a = policy(s)
+            s_prime, r = self.TR(s, a)
+            trajectory.append((s, a, r))
+            s = s_prime
+        return trajectory
 
 class ValueFunctionPolicy():
     def __init__(self, P: MDP, U: Callable[[Any], float] | np.ndarray):

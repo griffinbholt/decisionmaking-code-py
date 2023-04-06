@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable
 
 from ch07 import MDP, OfflinePlanningMethod, ValueFunctionPolicy
+from convenience import normalize
 
 class ApproximateValueFunction(ABC):
     @abstractmethod
@@ -49,8 +50,7 @@ class LocallyWeightedValueFunction(ApproximateValueFunction):
         self.theta = theta # vector of values at states in S
 
     def __call__(self, s: Any) -> float:
-        w = np.array([self.k(s, s_prime) for s_prime in self.S])
-        w /= np.linalg.norm(w, ord=1)
+        w = normalize(np.array([self.k(s, s_prime) for s_prime in self.S]), ord=1)
         return np.dot(self.theta, w)
 
     def fit(self, S: list[Any], U: np.ndarray):

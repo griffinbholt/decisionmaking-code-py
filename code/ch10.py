@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from abc import abstractmethod
 from typing import Any, Callable, Type
@@ -14,11 +15,11 @@ class MonteCarloPolicyEvaluation():
         self.d = d # depth
         self.m = m # number of samples
 
-    def evaluate_policy(self, policy: Callable[[Any], Any]):
-        state = np.random.choice(self.P.S, p=self.b)
+    def evaluate_policy(self, policy: Callable[[Any], Any]) -> float:
+        state = random.choices(self.P.S, weights=self.b)[0]
         return np.mean([rollout(self.P, state, policy, self.d) for _ in range(self.m)])
 
-    def evaluate_parametrized_policy(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray):
+    def evaluate_parametrized_policy(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray) -> float:
         return self.evaluate_policy(lambda s: policy(theta, s))
 
 class PolicySearchMethod(SolutionMethod):
