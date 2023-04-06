@@ -3,6 +3,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 from queue import PriorityQueue
 from scipy.stats import dirichlet
+from typing import Callable
 
 from ch07 import MDP, LinearProgramFormulation
 
@@ -20,14 +21,14 @@ class RLMDP(ABC):
         pass
 
 class ModelBasedMDP(RLMDP):
-    def __init__(self, S: list[int], A: list[int], gamma: float, U: np.ndarray, planner: MLEModelUpdate):
+    def __init__(self, S: list[int], A: list[int], gamma: float, U: np.ndarray, planner: 'MLEModelUpdate'):
         super().__init__(A, gamma)
         self.S = S # state space (assumes 1:nstates)
         self.U = U # value function
         self.planner = planner 
 
 class MaximumLikelihoodMDP(ModelBasedMDP):
-    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarray, planner: MLEModelUpdate):
+    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarray, planner: 'MLEModelUpdate'):
         super().__init__(S, A, gamma, U, planner)
         self.N = N # transition count N(s, a, s')
         self.rho = rho # reward sum p(s, a)
@@ -38,14 +39,14 @@ class MaximumLikelihoodMDP(ModelBasedMDP):
             return 0.0
         r = self.rho[s, a] / n
         T = lambda s, a, s_prime: self.N[s, a, s_prime] / n
-        return r + self.gamma * np.sum([T(s, a, s_prime)*U[s_prime] for s_prime in self.S])
+        return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def backup(self, U: np.ndarray, s: int) -> float:
         return np.max([self.lookahead(s, a) for a in self.A])
 
     def update(self, s: int, a: int, r: float, s_prime: int):
         self.N[s, a, s_prime] += 1
-        self.rho[s, a] += R
+        self.rho[s, a] += r
         self.planner.update(self, s, a, r, s_prime)
 
     def to_MDP(self) -> MDP:
@@ -108,7 +109,7 @@ class PrioritizedUpdate(MLEModelUpdate):
             
     def update_state(self, model: ModelBasedMDP, s: int):
         u = model.U[s]
-        model.U[s] = model.backup(U, s)
+        model.U[s] = model.backup(model.U, s)
         for s_other in model.S:
             for a_other in model.A:
                 n_sa = model.N[s_other, a_other].sum()
@@ -121,7 +122,7 @@ class PrioritizedUpdate(MLEModelUpdate):
                         self.pq.put((new_priority, s_other))
 
     def _get_current_priority(self, s: int, default_val: float) -> float:
-        for i in range(pq.qsize()):
+        for i in range(self.pq.qsize()):
             priority, item = self.pq.queue[i]
             if item == s:
                 del self.pq.queue[i]
@@ -140,14 +141,14 @@ class RmaxMDP(MaximumLikelihoodMDP):
             return self.rmax / (1 - self.gamma)
         r = self.rho[s, a] / n
         T = lambda s, a, s_prime: self.N[s, a, s_prime] / n
-        return r + self.gamma * np.sum([T(s, a, s_prime)*U[s_prime] for s_prime in self.S])
+        return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def to_MDP(self) -> MDP:
         N_sa = np.sum(self.N, axis=2, keepdims=True)
         T_matrix = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa >= self.m))
         N_sa = np.squeeze(N_sa)
         R_matrix = np.divide(self.rho, N_sa, out=np.full_like(self.rho, self.rmax), where=(N_sa >= self.m)) 
-        for s in np.where(N_sa < m)[0]:
+        for s in np.where(N_sa < self.m)[0]:
             T_matrix[s, :, s] = 1.0
         T = lambda s, a, s_prime: T_matrix[s, a, s_prime]
         R = lambda s, a: R_matrix[s, a]
@@ -169,7 +170,7 @@ class BayesianMDP(ModelBasedMDP):
             return 0.0
         r = self.R(s, a)
         T = lambda s, a, s_prime: self.D[s, a].alpha[s_prime] / n
-        return r + self.gamma * np.sum([T(s, a, s_prime)*U[s_prime] for s_prime in self.S])
+        return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def update(self, s: int, a: int, r: float, s_prime: int):
         alpha = self.D[s, a].alpha
@@ -180,7 +181,7 @@ class BayesianMDP(ModelBasedMDP):
     def sample(self) -> MDP:
         T_matrix = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
         T = lambda s, a, s_prime: T_matrix[s, a, s_prime]
-        TR = lambda s, a: (np.random.choice(len(self.S), p=T_matrix[s, a]), R(s, a))
+        TR = lambda s, a: (np.random.choice(len(self.S), p=T_matrix[s, a]), self.R(s, a))
         return MDP(self.gamma, self.S, self.A, T, self.R, TR)      
 
 class PosteriorSamplingUpdate(ModelUpdateScheme):

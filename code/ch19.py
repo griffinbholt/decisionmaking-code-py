@@ -1,3 +1,4 @@
+import numpy as np
 
 from typing import Any, Callable
 
@@ -61,7 +62,7 @@ class KalmanFilter():
 
 class ExtendedKalmanFilter(KalmanFilter):
     def __init__(self, mu_b: np.ndarray, Sigma_b: np.ndarray):
-        super().__init__(mu_n, Sigma_b)
+        super().__init__(mu_b, Sigma_b)
 
     # TODO - If I just overwrite the predict_step and update_step methods, and then
     # use the super in update, wrapped by Extended Kalman Filter, will it work?

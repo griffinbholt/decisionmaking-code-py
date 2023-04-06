@@ -14,7 +14,6 @@ class ParametrizedPolicyUpdate(ABC):
 class PolicyGradientEstimate():
     def __init__(self, policy: Callable[[np.ndarray, Any], Any], M: PolicyGradientEstimationMethod):
         self.policy = policy
-        self.theta = theta
         self.M = M 
 
     def __call__(self, theta: np.ndarray, return_FIM=False):

@@ -73,7 +73,7 @@ def RewardToGoGradient(PolicyGradientEstimationMethod):
 
     def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray) -> np.ndarray:
         policy_theta = lambda s: policy(theta, s)
-        R = lambda tau, j: np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in zip(j:self.d, tau[j:])]) # TODO - Does j:self.d work properly?
+        R = lambda tau, j: np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in zip(range(j, self.d + 1), tau[j:])]) # TODO - Note, this might be a bug, if range(j, self.d + 1) and tau[j:] are not same length
         grad_U = lambda tau: np.sum([self.grad_ll(theta, a, s) * R(tau, j) for (j, (s, a, r)) in enumerate(tau)])
         return np.mean([grad_U(self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)) for _ in range(self.m)]) # TODO - Check the dimension of this answer
 

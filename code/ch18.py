@@ -3,6 +3,7 @@ import numpy as np
 import random
 
 from abc import ABC, abstractmethod
+from typing import Callable
 
 from ch07 import MDP
 from convenience import normalize
@@ -128,7 +129,7 @@ class InverseReinforcementLearning(ImitationLearning):
         objective = cp.Maximize(t)
         constraints = [phi >= 0, 
                        cp.norm2(phi) <= 1,
-                       phi.T @ mu_E >= mus @ phi + t]
+                       phi.T @ self.mu_E >= mus @ phi + t]
         problem = cp.Problem(objective, constraints)
         problem.solve()
         return t.value, phi.value.T[0]

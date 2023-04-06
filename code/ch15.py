@@ -46,7 +46,7 @@ class ExploreThenCommitExploration(BanditPolicy):
         self.k = k # pulls remaining until commitment
 
     def __call__(self, model: BanditModel) -> int:
-        if self.k > 0
+        if self.k > 0:
             self.k -= 1
             return np.random.randint(low=0, high=len(model.B))
         return np.argmax([distrib.mean() for distrib in model.B])
