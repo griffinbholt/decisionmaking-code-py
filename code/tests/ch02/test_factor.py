@@ -14,7 +14,7 @@ class TestFactor():
         Assignment({"x": 1, "y": 0}): 0.4, Assignment({"x": 1, "y": 1}): 0.2}))
     phi_2 = Factor([X, Y], FactorTable({
         Assignment({"x": 0, "y": 0}): 0.3, Assignment({"x": 0, "y": 1}): 0.4,
-        Assignment({"x": 1, "y": 0}): 0.2, Assignment({"x": 1, "y": 1}): 0.1 }))
+        Assignment({"x": 1, "y": 0}): 0.2, Assignment({"x": 1, "y": 1}): 0.1}))
     phi_3 = Factor([Y, Z], FactorTable({
         Assignment({"y": 0, "z": 0}): 0.2, Assignment({"y": 0, "z": 1}): 0.0,
         Assignment({"y": 1, "z": 0}): 0.3, Assignment({"y": 1, "z": 1}): 0.5}))

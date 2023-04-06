@@ -12,8 +12,8 @@ def test_bayesian_scoring(tol=1e-15):
     graph = nx.DiGraph()
     graph.add_nodes_from(range(6))
     graph.add_edges_from([(0, 1), (2, 3), (4, 5)])
-    variables = [Variable("p1", 3), Variable("c1", 3), 
-                 Variable("p2", 3), Variable("c2", 3), 
+    variables = [Variable("p1", 3), Variable("c1", 3),
+                 Variable("p2", 3), Variable("c2", 3),
                  Variable("p3", 3), Variable("c3", 3)]
     example_score = -132.02362143513778
 

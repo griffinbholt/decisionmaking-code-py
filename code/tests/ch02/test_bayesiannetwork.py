@@ -4,6 +4,7 @@ import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from ch02 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
 
+
 class TestBayesianNetwork():
     B = Variable("b", 2)
     S = Variable("s", 2)
