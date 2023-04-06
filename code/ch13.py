@@ -3,8 +3,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
-from ch07 import MDP
-
 
 class ActorCriticMethod(ABC):
     @abstractmethod

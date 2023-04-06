@@ -97,10 +97,10 @@ class FullUpdate(MLEModelUpdate):
 
 class RandomizedUpdate(MLEModelUpdate):
     def __init__(self, m: int):
-        self.m = m 
+        self.m = m
 
     def update(self, model: MaximumLikelihoodMDP, s: int, a: int, r: float, s_prime: int):
-        U = model.U 
+        U = model.U
         U[s] = model.backup(U, s)
         for _ in range(self.m):
             s = np.random.randint(low=0, high=len(model.S))
@@ -109,8 +109,8 @@ class RandomizedUpdate(MLEModelUpdate):
 
 class PrioritizedUpdate(MLEModelUpdate):
     def __init__(self, m: int, pq: PriorityQueue):
-        self.m = m # number of updates
-        self.pq = pq
+        self.m = m    # number of updates
+        self.pq = pq  # priority queue
 
     def update(self, model: ModelBasedMDP, s: int, a: int, r: float, s_prime: int):
         self.pq.put((np.inf, s))
@@ -118,7 +118,7 @@ class PrioritizedUpdate(MLEModelUpdate):
             if self.pq.empty():
                 break
             self.update_state(model, self.pq.get()[1])
-            
+
     def update_state(self, model: ModelBasedMDP, s: int):
         u = model.U[s]
         model.U[s] = model.backup(model.U, s)
@@ -154,8 +154,8 @@ class RmaxMDP(MaximumLikelihoodMDP):
                  m: int,
                  rmax: float):
         super().__init__(S, A, N, rho, gamma, U, planner)
-        self.m = m # count threshold
-        self.rmax = rmax # maximum reward
+        self.m = m        # count threshold
+        self.rmax = rmax  # maximum reward
 
     def lookahead(self, s: int, a: int) -> float:
         n = self.N[s, a].sum()
@@ -169,7 +169,7 @@ class RmaxMDP(MaximumLikelihoodMDP):
         N_sa = np.sum(self.N, axis=2, keepdims=True)
         T = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa >= self.m))
         N_sa = np.squeeze(N_sa)
-        R = np.divide(self.rho, N_sa, out=np.full_like(self.rho, self.rmax), where=(N_sa >= self.m)) 
+        R = np.divide(self.rho, N_sa, out=np.full_like(self.rho, self.rmax), where=(N_sa >= self.m))
         for s in np.where(N_sa < self.m)[0]:
             T[s, :, s] = 1.0
         return MDP(self.gamma, self.S, self.A, T, R)
@@ -184,11 +184,11 @@ class BayesianMDP(ModelBasedMDP):
                  gamma: float, U: np.ndarray,
                  planner: MLEModelUpdate):
         super().__init__(S, A, gamma, U, planner)
-        self.D = D # Dirichlet distributions D[s, a]
-        self.R = R # reward function as matrix (not estimated)
-        self.gamma = gamma # discount
-        self.U = U # value function
-        self.planner = planner 
+        self.D = D          # Dirichlet distributions D[s, a]
+        self.R = R          # reward function as matrix (not estimated)
+        self.gamma = gamma  # discount
+        self.U = U          # value function
+        self.planner = planner
 
     def lookahead(self, s: int, a: int) -> float:
         n = np.sum(self.D[s, a].alpha)
@@ -206,7 +206,7 @@ class BayesianMDP(ModelBasedMDP):
 
     def sample(self) -> MDP:
         T = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
-        return MDP(self.gamma, self.S, self.A, T, self.R)      
+        return MDP(self.gamma, self.S, self.A, T, self.R)
 
 
 class PosteriorSamplingUpdate(ModelUpdateScheme):

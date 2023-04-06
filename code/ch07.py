@@ -12,7 +12,7 @@ class MDP():
                  A: list[Any],
                  T: Callable[[Any, Any, Any], float] | np.ndarray,
                  R: Callable[[Any, Any], float] | np.ndarray,
-                 TR: Callable[[Any, Any], tuple[Any, float]]=None):
+                 TR: Callable[[Any, Any], tuple[Any, float]] = None):
         self.gamma = gamma  # discount factor
         self.S = S          # state space
         self.A = A          # action space
