@@ -26,10 +26,10 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 11 | 99% | 0% | Just need to make a few syntactic decisions |
 | 12 | 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
 | 13 | 0% | 0% | Skipped for now; coming back to it later |
-| 14 | 0% | 0% | Skipped for now; coming back to it later |
+| 14 | 100% | 0% | Needs to be tested |
 | 15 | 90% | 0% | Just need to write the `simulate` method from the end of the chapter |
-| 16 | 100% | 0% | Need to be tested |
-| 17 | 100% | 0% | Need to be tested |
+| 16 | 100% | 0% | Needs to be tested |
+| 17 | 100% | 0% | Needs to be tested |
 | 18 | 70% | 0% | `MaximumEntropyIRL` needs to be written |
 | 19 | 25% | 0% | I have only written `DiscreteStateFilter` and `KalmanFilter` |
 | 20-27 | 0% | 0% | Nothing written |

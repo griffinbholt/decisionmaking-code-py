@@ -53,7 +53,7 @@ class RestrictedPolicyUpdate(ParametrizedPolicyUpdate):
 
 class NaturalPolicyUpdate(ParametrizedPolicyUpdate):
     def __init__(self, grad_U: PolicyGradientEstimate, epsilon: float):
-        assert type(self.grad_U.M) == LikelihoodRatioGradient # TODO - Check if works
+        assert type(self.grad_U.M) == LikelihoodRatioGradient  # TODO - Check if works
         self.grad_U = grad_U    # policy gradient estimate (specifically, likelihood ratio gradient estimate)
         self.epsilon = epsilon  # divergence bound
 
@@ -64,8 +64,8 @@ class NaturalPolicyUpdate(ParametrizedPolicyUpdate):
 
 
 class TrustRegionUpdate(ParametrizedPolicyUpdate):
-    pass # TODO
+    pass  # TODO
 
 
 class ClampedSurrogateUpdate(ParametrizedPolicyUpdate):
-    pass # TODO
+    pass  # TODO
