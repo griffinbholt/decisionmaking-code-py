@@ -130,7 +130,7 @@ class PrioritizedUpdate(MLEModelUpdate):
         return default_val
 
 class RmaxMDP(MaximumLikelihoodMDP):
-    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarra, planner: MLEModelUpdate, m: int, rmax: float):
+    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarray, planner: MLEModelUpdate, m: int, rmax: float):
         super().__init__(S, A, N, rho, gamma, U, planner)
         self.m = m # count threshold
         self.rmax = rmax # maximum reward

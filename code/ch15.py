@@ -12,7 +12,7 @@ class BanditProblem():
     def R(self, a: int):
         return 1 if np.random.rand() < self.theta[a] else 0
 
-    def simulate(self, model: BanditModel, policy: BanditPolicy, h: int):
+    def simulate(self, model: 'BanditModel', policy: 'BanditPolicy', h: int):
         for _ in range(h):
             a = policy(model)
             r = self.R(a)
@@ -23,9 +23,8 @@ class BanditModel():
         self.B = B
 
     def update(self, a: int, r: int) -> beta:
-        alpha, b = model.B[a].args
-        model.B[a] = beta(alpha + r, b + (1 - r))
-        return model
+        alpha, b = self.B[a].args
+        self.B[a] = beta(alpha + r, b + (1 - r))
 
 class BanditPolicy(ABC):
     @abstractmethod

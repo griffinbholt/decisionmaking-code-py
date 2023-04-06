@@ -18,7 +18,7 @@ class IncrementalEstimate():
         self.mu += self.alpha(self.m) * (x - self.mu)
 
 class ModelFreeMDP(RLMDP):
-    def __init__(self, A: list[int], gamma: float, Q: np.ndarray | Callable[[np.ndarray, float, int], float], alpha: float)
+    def __init__(self, A: list[int], gamma: float, Q: np.ndarray | Callable[[np.ndarray, float, int], float], alpha: float):
         super().__init__(A, gamma)
         self.Q = Q         # action value function, either as a numpy array Q[s, a] or a parametrized function Q(theta, s, a) (depending on method)
         self.alpha = alpha # learning rate
