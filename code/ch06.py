@@ -5,11 +5,11 @@ from ch03 import DiscreteInferenceMethod
 
 
 class SimpleProblem():
-    def __init__(self, 
-                 bn: BayesianNetwork, 
-                 chance_vars: list[Variable], 
-                 decision_vars: list[Variable], 
-                 utility_vars: list[Variable], 
+    def __init__(self,
+                 bn: BayesianNetwork,
+                 chance_vars: list[Variable],
+                 decision_vars: list[Variable],
+                 utility_vars: list[Variable],
                  utilities: dict[str, np.ndarray]):
         self.bn = bn
         self.chance_vars = chance_vars
@@ -38,4 +38,3 @@ class SimpleProblem():
             p = phi.table[o_prime]
             voi += p*(self.solve(o_o_prime, M)[1])
         return voi
-    

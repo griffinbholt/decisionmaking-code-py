@@ -48,7 +48,7 @@ class MDP():
     def randstep(self, s: Any, a: Any) -> tuple[Any, float]:
         return self.TR(s, a)
 
-    def simulate(self, s: Any, policy: Callable[[Any], Any], d: int) -> list[tuple[Any, Any, float]]: # TODO - Create test
+    def simulate(self, s: Any, policy: Callable[[Any], Any], d: int) -> list[tuple[Any, Any, float]]:  # TODO - Create test
         trajectory = []
         for _ in range(d):
             a = policy(s)
