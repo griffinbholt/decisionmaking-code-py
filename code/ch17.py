@@ -95,8 +95,8 @@ class ReplayGradientQLearning(GradientQLearning):
         if len(self.buffer) == self.buffer.maxlen: # i.e., the buffer is full
             U = lambda s: np.max([self.Q(self.theta, s, a) for a in self.A])
             del_Q = lambda s, a, r, s_prime: (r + (self.gamma * U(s_prime)) - self.Q(self.theta, s, a)) * self.grad_Q(self.theta, s, a)
-            delta = np.mean([del_Q(s, a, r, s_prime) for (s, a, r, s_prime) in random.choices(list(dq), k=m_grad)])
-            theta += self.alpha * scale_gradient(delta, l2_max=1.0)
+            delta = np.mean([del_Q(s, a, r, s_prime) for (s, a, r, s_prime) in random.choices(list(self.buffer), k=self.m_grad)])
+            self.theta += self.alpha * scale_gradient(delta, l2_max=1.0)
             for _ in range(self.m):
                 self.buffer.popleft()
         else:
