@@ -7,15 +7,18 @@ from scipy.stats import multivariate_normal
 from ch02 import Assignment, Factor, FactorTable, BayesianNetwork
 from ch02 import marginalize, condition_multiple
 
+
 class InferenceMethod(ABC):
     @abstractmethod
     def infer(self, *args, **kwargs):
         pass
 
+
 class DiscreteInferenceMethod(InferenceMethod):
     @abstractmethod
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
         pass
+
 
 class ExactInference(DiscreteInferenceMethod):
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
@@ -25,6 +28,7 @@ class ExactInference(DiscreteInferenceMethod):
             phi = marginalize(phi, name)
         phi.normalize()
         return phi
+
 
 class VariableElimination(DiscreteInferenceMethod):
     def __init__(self, ordering: list[int]):
@@ -46,6 +50,7 @@ class VariableElimination(DiscreteInferenceMethod):
         phi.normalize()
         return phi
 
+
 class DirectSampling(DiscreteInferenceMethod):
     def __init__(self, m):
         self.m = m
@@ -54,13 +59,14 @@ class DirectSampling(DiscreteInferenceMethod):
         table = FactorTable()
         for _ in range(self.m):
             a = bn.sample()
-            if all(a[k] == v for k,v in evidence.items()):
+            if all(a[k] == v for (k, v) in evidence.items()):
                 b = a.select(query)
                 table[b] = table.get(b, default_val=0.0) + 1
         variables = [var for var in bn.variables if var.name in query]
         phi = Factor(variables, table)
         phi.normalize()
         return phi
+
 
 class LikelihoodWeightedSampling(DiscreteInferenceMethod):
     def __init__(self, m):
@@ -79,18 +85,19 @@ class LikelihoodWeightedSampling(DiscreteInferenceMethod):
                 else:
                     a[name] = condition_multiple(phi, a).sample()[name]
             b = a.select(query)
-            table[b] = table.get(b, default_val=0.0) + w 
+            table[b] = table.get(b, default_val=0.0) + w
         variables = [var for var in bn.variables if var.name in query]
         phi = Factor(variables, table)
         phi.normalize()
         return phi
+
 
 class GibbsSampling(DiscreteInferenceMethod):
     def __init__(self, m_samples: int, m_burnin: int, m_skip: int, ordering: list[int]):
         self.m_samples = m_samples
         self.m_burnin = m_burnin
         self.m_skip = m_skip
-        self.ordering = ordering 
+        self.ordering = ordering
 
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
         table = FactorTable()
@@ -121,13 +128,14 @@ class GibbsSampling(DiscreteInferenceMethod):
     @staticmethod
     def blanket(bn: BayesianNetwork, a: Assignment, i: int) -> Factor:
         name = bn.variables[i].name
-        value = a[name]
+        value = a[name] # TODO - F841 local variable 'value' is assigned to but never used (Talk to Mykel & Tim about this)
         a_prime = a.copy()
         del a_prime[name]
         factors = [phi for phi in bn.factors if phi.in_scope(name)]
         phi = Factor.prod([condition_multiple(factor, a_prime) for factor in factors])
         phi.normalize()
         return phi
+
 
 class MultivariateGaussianInference(InferenceMethod):
     """
@@ -136,7 +144,11 @@ class MultivariateGaussianInference(InferenceMethod):
         evidencevars: NumPy array of integers specifying the evidence variables
         evidence: NumPy array containing the values of the evidence variables
     """
-    def infer(self, D: multivariate_normal, query: np.ndarray, evidence_vars: np.ndarray, evidence: np.ndarray) -> multivariate_normal:
+    def infer(self, 
+              D: multivariate_normal, 
+              query: np.ndarray, 
+              evidence_vars: np.ndarray, 
+              evidence: np.ndarray) -> multivariate_normal:
         mu, Sigma = D.mean, D.cov
         b, mu_a, mu_b = evidence, mu[query], mu[evidence_vars]
         A = Sigma[query][:, query]

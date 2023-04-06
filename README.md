@@ -1,6 +1,6 @@
 # decisionmaking-code-py
 
-<!-- [![Python package](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml/badge.svg)](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml) -->
+[![Python package](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml/badge.svg)](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml)
 
 *Original Julia Code by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
 
