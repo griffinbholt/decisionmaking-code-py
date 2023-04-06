@@ -14,10 +14,10 @@ class Variable():
         return "(" + self.name + ", " + str(self.r) + ")"
 
 
-"""
-Assignment: A mapping from variable names (str) to integer values (int)
-"""
 class Assignment(dict[str, int]):
+    """
+    Assignment: A mapping from variable names (str) to integer values (int)
+    """
     def select(self, varnames: list[str]) -> 'Assignment':
         return Assignment({n: dict.__getitem__(self, n) for n in varnames})
 
@@ -25,15 +25,15 @@ class Assignment(dict[str, int]):
         return hash(tuple(sorted(self.items())))
 
     def copy(self) -> 'Assignment':
-        result = Assignment() 
+        result = Assignment()
         result.update(self)
         return result
 
 
-"""
-FactorTable: A mapping from assignments (Assignment) to values (float)
-"""
 class FactorTable(dict[Assignment, float]):
+    """
+    FactorTable: A mapping from assignments (Assignment) to values (float)
+    """
     def get(self, key: Assignment, default_val: float):
         return dict.__getitem__(self, key) if key in self.keys() else default_val
 
@@ -48,7 +48,7 @@ class FactorTable(dict[Assignment, float]):
 class Factor():
     def __init__(self, variables: list[Variable], table: FactorTable):
         self.variables = variables
-        self.table = table        
+        self.table = table
         self.variable_names = [var.name for var in variables]
 
     def __str__(self) -> str:
@@ -82,7 +82,7 @@ class Factor():
         for a, v in self.table.items():
             total += v/w
             if total >= p:
-                return a 
+                return a
         return Assignment()
 
     @staticmethod
@@ -94,10 +94,12 @@ def assignments(variables: list[Variable]) -> list[Assignment]:
     names = [var.name for var in variables]
     return [Assignment(zip(names, values)) for values in itertools.product(*[[i for i in range(var.r)] for var in variables])]
 
+
 # Note: Although `marginalize`, `condition_single`, and `condition_multiple` are
 # all defined in Chapter 3, the `BayesianNetwork.sample()` function depends on `condition_multiple`.
 # To import `condition_multiple` would create a circular import issue. Thus, these functions are included
 # in the ch02 code module, but can still be displayed in Chapter 3 of the textbook.
+
 
 def marginalize(phi: Factor, name: str) -> Factor:
     table = FactorTable()
