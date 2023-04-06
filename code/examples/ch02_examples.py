@@ -3,6 +3,7 @@ import sys; sys.path.append('../')
 
 from ch02 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
 
+
 # Example 2.3: Constructing a discrete factor
 def example_2_3():
     X = Variable("x", 2)
@@ -16,17 +17,20 @@ def example_2_3():
     }))
     return phi
 
+
 # Example 2.5: Constructing a Bayesian network for the satellite-monitoring problem
 def example_2_5():
-    B = Variable("b", 2); S = Variable("s", 2)
+    B = Variable("b", 2)
+    S = Variable("s", 2)
     E = Variable("e", 2)
-    D = Variable("d", 2);  C = Variable("c", 2)
+    D = Variable("d", 2)
+    C = Variable("c", 2)
     variables = [B, S, E, D, C]
     factors = [
         Factor([B], FactorTable({Assignment({"b": 0}): 0.99, Assignment({"b": 1}): 0.01})),
         Factor([S], FactorTable({Assignment({"s": 0}): 0.98, Assignment({"s": 1}): 0.02})),
         Factor([E, B, S], FactorTable({
-            Assignment({"e": 0, "b": 0, "s": 0}): 0.90, Assignment({"e": 0, "b": 0, "s": 1}): 0.04, 
+            Assignment({"e": 0, "b": 0, "s": 0}): 0.90, Assignment({"e": 0, "b": 0, "s": 1}): 0.04,
             Assignment({"e": 0, "b": 1, "s": 0}): 0.05, Assignment({"e": 0, "b": 1, "s": 1}): 0.01,
             Assignment({"e": 1, "b": 0, "s": 0}): 0.10, Assignment({"e": 1, "b": 0, "s": 1}): 0.96,
             Assignment({"e": 1, "b": 1, "s": 0}): 0.95, Assignment({"e": 1, "b": 1, "s": 1}): 0.99})),

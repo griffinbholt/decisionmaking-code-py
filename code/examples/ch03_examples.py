@@ -6,19 +6,21 @@ from ch02 import Variable, Assignment, FactorTable, Factor, marginalize, conditi
 from ch03 import DirectSampling, LikelihoodWeightedSampling, MultivariateGaussianInference
 from ch02_examples import example_2_3, example_2_5
 
+
 # Example 3.1: The Factor Product
 def example_3_1():
-    X = Variable("x", 2); Y = Variable("y", 2); Z = Variable("z", 2)
+    X = Variable("x", 2)
+    Y = Variable("y", 2)
+    Z = Variable("z", 2)
     phi_1 = Factor([X, Y], FactorTable({
         Assignment({"x": 0, "y": 0}): 0.3, Assignment({"x": 0, "y": 1}): 0.4,
-        Assignment({"x": 1, "y": 0}): 0.2, Assignment({"x": 1, "y": 1}): 0.1 
-    }))
+        Assignment({"x": 1, "y": 0}): 0.2, Assignment({"x": 1, "y": 1}): 0.1}))
     phi_2 = Factor([Y, Z], FactorTable({
         Assignment({"y": 0, "z": 0}): 0.2, Assignment({"y": 0, "z": 1}): 0.0,
-        Assignment({"y": 1, "z": 0}): 0.3, Assignment({"y": 1, "z": 1}): 0.5
-    }))
+        Assignment({"y": 1, "z": 0}): 0.3, Assignment({"y": 1, "z": 1}): 0.5}))
     phi_3 = phi_1 * phi_2
-    return(phi_3)
+    return phi_3
+
 
 # Example 3.2: Factor Marginalization
 def example_3_2():
@@ -26,11 +28,13 @@ def example_3_2():
     phi_2 = marginalize(phi_1, "y")
     return phi_2
 
+
 # Example 3.3: Factor Conditioning
 def example_3_3():
     phi_1 = example_2_3()
     phi_2 = condition_single(phi_1, name="y", value=1)
     return phi_2
+
 
 # Example 3.5: Direct Sampling
 # Note: The samples drawn here are drawn from the factors in Ex. 2.5, 
@@ -44,6 +48,7 @@ def example_3_5():
     phi = M.infer(bn, query, evidence)
     return phi
 
+
 # Example 3.6: Likelihood Weighted Sampling
 # Note: The samples drawn here are drawn from the factors in Ex. 2.5, 
 # and will be different than those in the textbook.
@@ -55,6 +60,7 @@ def example_3_6():
     M = LikelihoodWeightedSampling(m=1000)
     phi = M.infer(bn, query, evidence)
     return phi
+
 
 # Example 3.7: Multivariate Gaussian Inference
 def example_3_7():
