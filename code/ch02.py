@@ -137,8 +137,8 @@ class BayesianNetwork():
         self.graph = graph
 
     def probability(self, assignment: Assignment) -> float:
-        def subassignment(phi: Factor): return assignment.select(phi.variable_names)
-        def prob(phi: Factor): return phi.table.get(subassignment(phi), default_val=0.0)
+        def subassignment(phi): return assignment.select(phi.variable_names)
+        def prob(phi): return phi.table.get(subassignment(phi), default_val=0.0)
         return np.prod([prob(phi) for phi in self.factors])
 
     def sample(self) -> Assignment:

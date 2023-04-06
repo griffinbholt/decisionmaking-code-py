@@ -28,7 +28,7 @@ class RolloutLookahead(OnlinePlanningMethod):
         self.d = d            # depth
 
     def __call__(self, s: Any) -> Any:
-        def U(s: Any): return rollout(self.P, s, self.policy, self.d)
+        def U(s): return rollout(self.P, s, self.policy, self.d)
         return (self.P.greedy(U, s))[0]
 
 
@@ -36,7 +36,7 @@ def forward_search(P: MDP, s: Any, d: int, U: Callable[[Any], float]) -> tuple[A
     if d <= 0:
         return (None, U(s))
     best = (None, -np.inf)  # TODO - Decide if split up or not
-    def U_prime(s: Any): return (forward_search(P, s, d - 1, U))[1]
+    def U_prime(s): return (forward_search(P, s, d - 1, U))[1]
     for a in P.A:
         u = P.lookahead(U_prime, s, a)
         if u > best[1]:
@@ -60,7 +60,7 @@ def branch_and_bound(P: MDP, s: Any, d: int,
     if d <= 0:
         return (None, U_lo(s))
 
-    def U_prime(s: Any): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
+    def U_prime(s): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
     best = (None, -np.inf)  # TODO - Decide if split up or not
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
         if Q_hi(s, a) < best[1]:

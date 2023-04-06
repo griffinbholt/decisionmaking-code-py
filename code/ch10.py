@@ -86,7 +86,7 @@ class GeneticPolicySearch(PolicySearchMethod):
 
 class CrossEntropyPolicySearch(SearchDistributionMethod, PolicySearchMethod):
     """
-    Due to the limitations of the scipy.stats library (distributions lack a `fit` function), 
+    Due to the limitations of the scipy.stats library (distributions lack a `fit` function),
     we implement this for the Multivariate Gaussian distribution specifically
     (instead of generically, for any multivariable distribution).
 
@@ -99,7 +99,7 @@ class CrossEntropyPolicySearch(SearchDistributionMethod, PolicySearchMethod):
         self.k_max = k_max      # number of iterations
 
     def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> multivariate_normal:
-        p = self.p 
+        p = self.p
         for _ in range(self.k_max):
             thetas = p.rvs(self.m)
             us = np.array([U(policy, theta) for theta in thetas])
