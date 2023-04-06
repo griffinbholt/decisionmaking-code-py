@@ -1,8 +1,8 @@
-import pytest
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from ch02 import Variable, Assignment
 from ch02 import assignments
+
 
 class TestAssignment():
     a1 = Assignment({"x": 0, "y": 0, "z": 0})
@@ -23,6 +23,7 @@ class TestAssignment():
         assert a1_copy == self.a1
         a1_copy["x"] = 1
         assert a1_copy != self.a1
+
 
 def test_assignment_function():
     variables = [Variable("x", 2), Variable("y", 2), Variable("z", 2)]

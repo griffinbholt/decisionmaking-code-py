@@ -1,9 +1,8 @@
-import networkx as nx 
-import numpy as np
-import pytest
+import networkx as nx
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from ch05 import are_markov_equivalent
+
 
 class TestAreMarkovEquivalent():
     member1 = nx.DiGraph()
@@ -20,7 +19,7 @@ class TestAreMarkovEquivalent():
 
     nonmember2 = nx.DiGraph()
     nonmember2.add_nodes_from(range(6))
-    
+
     nonmember3 = nx.DiGraph()
     nonmember3.add_nodes_from(range(5))
     nonmember3.add_edges_from([(0, 4), (0, 1), (2, 1), (2, 3), (4, 3)])

@@ -1,11 +1,11 @@
 import numpy as np
-import pytest
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from ch07 import LinearQuadraticProblem
 
-# From Example 7.4
+
 class TestLinearQuadraticProblem():
+    # From Example 7.4
     t_step = 1
     Ts = np.array([[1, t_step], [0, 1]])
     Ta = np.array([[0.5*(t_step**2)], [t_step]])

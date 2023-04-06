@@ -6,6 +6,7 @@ from typing import Any
 
 from ch07 import MDP, PolicyIteration
 
+
 def exercise_7_5():
     # Three-tile, Straight-Line Hexworld
     gamma = 0.9
@@ -21,14 +22,14 @@ def exercise_7_5():
                     return 0.15
                 elif s_prime == S[0]:
                     return 0.85
-                else: # s_prime == S[2], S[3]
+                else:  # s_prime == S[2], S[3]
                     return 0.0
-            else: # a == "east"
+            else:  # a == "east"
                 if s_prime == S[1]:
                     return 0.7
                 elif s_prime == S[0]:
                     return 0.3
-                else: # s_prime == S[2], S[3]
+                else:  # s_prime == S[2], S[3]
                     return 0.0
         elif s == S[1]:
             if a == "west":
@@ -36,30 +37,30 @@ def exercise_7_5():
                     return 0.7
                 elif s_prime == S[1]:
                     return 0.3
-                else: # s_prime == S[2], S[3]
+                else:  # s_prime == S[2], S[3]
                     return 0.0
             elif a in ["northwest", "southwest"]:
                 if s_prime == S[0]:
                     return 0.15
                 elif s_prime == S[1]:
                     return 0.85
-                else: # s_prime == S[2], S[3]
+                else:  # s_prime == S[2], S[3]
                     return 0.0
             elif a in ["northeast", "southeast"]:
                 if s_prime == S[2]:
                     return 0.15
                 elif s_prime == S[1]:
                     return 0.85
-                else: # s_prime == S[0], S[3]
+                else:  # s_prime == S[0], S[3]
                     return 0.0
-            else: # a == "east"
+            else:  # a == "east"
                 if s_prime == S[2]:
                     return 0.7
                 elif s_prime == S[1]:
                     return 0.3
-                else: # s_prime == S[0], S[3]
+                else:  # s_prime == S[0], S[3]
                     return 0.0
-        else: # s == S[2] or s == S[3]
+        else:  # s == S[2] or s == S[3]
             return 1.0 if s_prime == S[3] else 0.0
 
     def R_orig(s: Any, a: Any, s_prime: Any) -> float:
@@ -70,7 +71,7 @@ def exercise_7_5():
                 return 0.0
         elif s == S[2]:
             return 10.0
-        else: # s == S[3]
+        else:  # s == S[3]
             return 0.0
 
     def R(s: Any, a: Any) -> float:
@@ -89,7 +90,7 @@ def exercise_7_5():
             return "northeast"
         elif s == S[2]:
             return "southwest"
-        else: # s == S[3]
+        else:  # s == S[3]
             return "any"
 
     P = MDP(gamma, S, A, T, R, TR)

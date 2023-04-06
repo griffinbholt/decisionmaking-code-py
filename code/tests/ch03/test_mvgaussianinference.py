@@ -1,9 +1,9 @@
 import numpy as np
-import pytest
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 from scipy.stats import multivariate_normal
 
 from ch03 import MultivariateGaussianInference
+
 
 class TestMultivariateGaussianInference():
     def test(self, tol=1e-15):
@@ -13,7 +13,7 @@ class TestMultivariateGaussianInference():
         D = multivariate_normal(mean, cov)
 
         # Query: x_1
-        query = np.array([0]) 
+        query = np.array([0])
 
         # Evidence: x_2 = 2.0
         evidence_vars = np.array([1])

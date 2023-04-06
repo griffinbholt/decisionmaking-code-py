@@ -1,12 +1,11 @@
 import numpy as np
-import pytest
-import random
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 from typing import Any
 
 from ch07 import MDP
 from ThreeTileStraightlineHexworld import gamma, S, A, T, R, TR, policy
+
 
 class TestMDP():
     P = MDP(gamma, S, A, T, R, TR)
@@ -23,7 +22,7 @@ class TestMDP():
             return 2.0
         elif s == S[2]:
             return 3.0
-        else: # s == S[3]
+        else:  # s == S[3]
             return 4.0
 
     U1_vec = np.zeros(4)
@@ -51,7 +50,7 @@ class TestMDP():
     def test_backup(self):
         assert self.P.backup(TestMDP.U2, s=1) == 1.23
         assert self.P.backup(TestMDP.U2_vec, s=1) == 1.23
-    
+
     def test_randstep(self, tol=1e-2):
         count = 0
         n_trials = 100000
@@ -61,5 +60,4 @@ class TestMDP():
             assert result in possible_results
             if result == possible_results[0]:
                 count += 1
-        print(count / n_trials)
         assert np.abs(0.3 - (count / n_trials)) < tol
