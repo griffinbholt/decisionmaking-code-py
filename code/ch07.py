@@ -10,15 +10,27 @@ class MDP():
                  gamma: float,
                  S: list[Any],
                  A: list[Any],
-                 T: Callable[[Any, Any, Any], float],
-                 R: Callable[[Any, Any], float],
-                 TR: Callable[[Any, Any], tuple[Any, float]]):
+                 T: Callable[[Any, Any, Any], float] | np.ndarray,
+                 R: Callable[[Any, Any], float] | np.ndarray,
+                 TR: Callable[[Any, Any], tuple[Any, float]]=None):
         self.gamma = gamma  # discount factor
         self.S = S          # state space
         self.A = A          # action space
-        self.T = T          # transition function
-        self.R = R          # reward function
-        self.TR = TR        # sample next state and reward given current state and action: s', r = TR(s, a)
+
+        # reward function R(s, a)
+        if type(R) == np.ndarray:
+            self.R = lambda s, a: R[s, a]
+        else:
+            self.R = R
+
+        # transition function T(s, a, s')
+        # sample next state and reward given current state and action: s', r = TR(s, a)
+        if type(T) == np.ndarray:
+            self.T = lambda s, a, s_prime: T[s, a, s_prime]
+            self.TR = lambda s, a: (np.random.choice(len(self.S), p=T[s, a]), self.R(s, a))
+        else:
+            self.T = T
+            self.TR = TR
 
     def lookahead(self, U: Callable[[Any], float] | np.ndarray, s: Any, a: Any) -> float:
         if callable(U):

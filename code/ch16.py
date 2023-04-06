@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 
 from abc import ABC, abstractmethod
 from queue import PriorityQueue
@@ -7,10 +7,11 @@ from typing import Callable
 
 from ch07 import MDP, LinearProgramFormulation
 
+
 class RLMDP(ABC):
     def __init__(self, A: list[int], gamma: float):
-        self.A = A # action space (assumes 1:nactions)
-        self.gamma = gamma # discount factor
+        self.A = A          # action space (assumes 1:nactions)
+        self.gamma = gamma  # discount factor
 
     @abstractmethod
     def lookahead(self, s: int, a: int) -> float:
@@ -20,25 +21,34 @@ class RLMDP(ABC):
     def update(self, s: int, a: int, r: float, s_prime: int):
         pass
 
+
 class ModelBasedMDP(RLMDP):
     def __init__(self, S: list[int], A: list[int], gamma: float, U: np.ndarray, planner: 'MLEModelUpdate'):
         super().__init__(A, gamma)
-        self.S = S # state space (assumes 1:nstates)
-        self.U = U # value function
-        self.planner = planner 
+        self.S = S  # state space (assumes 1:nstates)
+        self.U = U  # value function
+        self.planner = planner
+
 
 class MaximumLikelihoodMDP(ModelBasedMDP):
-    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarray, planner: 'MLEModelUpdate'):
+    def __init__(self,
+                 S: list[int],
+                 A: list[int],
+                 N: np.ndarray,
+                 rho: np.ndarray,
+                 gamma: float,
+                 U: np.ndarray,
+                 planner: 'MLEModelUpdate'):
         super().__init__(S, A, gamma, U, planner)
-        self.N = N # transition count N(s, a, s')
-        self.rho = rho # reward sum p(s, a)
+        self.N = N      # transition count N(s, a, s')
+        self.rho = rho  # reward sum p(s, a)
 
     def lookahead(self, s: int, a: int) -> float:
         n = self.N[s, a].sum()
         if n == 0:
             return 0.0
         r = self.rho[s, a] / n
-        T = lambda s, a, s_prime: self.N[s, a, s_prime] / n
+        def T(s, a, s_prime): return self.N[s, a, s_prime] / n
         return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def backup(self, U: np.ndarray, s: int) -> float:
@@ -51,29 +61,29 @@ class MaximumLikelihoodMDP(ModelBasedMDP):
 
     def to_MDP(self) -> MDP:
         N_sa = np.sum(self.N, axis=2, keepdims=True)
-        T_matrix = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa != 0))
+        T = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa != 0))
         N_sa = np.squeeze(N_sa)
-        R_matrix = np.divide(self.rho, N_sa, out=np.zeros_like(self.rho), where=(N_sa != 0))
-        T = lambda s, a, s_prime: T_matrix[s, a, s_prime]
-        R = lambda s, a: R_matrix[s, a]
-        TR = lambda s, a: (np.random.choice(len(self.S), p=T_matrix[s, a]), R(s, a))
-        return MDP(self.gamma, self.S, self.A, T, R, TR)
+        R = np.divide(self.rho, N_sa, out=np.zeros_like(self.rho), where=(N_sa != 0))
+        return MDP(self.gamma, self.S, self.A, T, R)
 
     def epsilon_greedy_exploration(self, s: int, epsilon: float) -> int:
         if np.random.rand() < epsilon:
             return np.random.choice(self.A)
-        Q = lambda s, a: self.lookahead(s, a)
+        def Q(s, a): return self.lookahead(s, a)
         return np.argmax([Q(s, a) for a in self.A])
+
 
 class ModelUpdateScheme(ABC):
     @abstractmethod
     def update(self, model: ModelBasedMDP, s: int, a: int, r: float, s_prime: int):
         pass
 
+
 class MLEModelUpdate(ModelUpdateScheme):
     @abstractmethod
     def update(self, model: MaximumLikelihoodMDP, s: int, a: int, r: float, s_prime: int):
         pass
+
 
 class FullUpdate(MLEModelUpdate):
     def __init__(self):
@@ -83,7 +93,8 @@ class FullUpdate(MLEModelUpdate):
         P = model.to_MDP()
         U = self.solver.solve(P)
         np.copyto(model.U, U)
-    
+
+
 class RandomizedUpdate(MLEModelUpdate):
     def __init__(self, m: int):
         self.m = m 
@@ -94,6 +105,7 @@ class RandomizedUpdate(MLEModelUpdate):
         for _ in range(self.m):
             s = np.random.randint(low=0, high=len(model.S))
             U[s] = model.backup(U, s)
+
 
 class PrioritizedUpdate(MLEModelUpdate):
     def __init__(self, m: int, pq: PriorityQueue):
@@ -129,8 +141,18 @@ class PrioritizedUpdate(MLEModelUpdate):
                 return priority
         return default_val
 
+
 class RmaxMDP(MaximumLikelihoodMDP):
-    def __init__(self, S: list[int], A: list[int], N: np.ndarray, rho: np.ndarray, gamma: float, U: np.ndarray, planner: MLEModelUpdate, m: int, rmax: float):
+    def __init__(self,
+                 S: list[int],
+                 A: list[int],
+                 N: np.ndarray,
+                 rho: np.ndarray,
+                 gamma: float,
+                 U: np.ndarray,
+                 planner: MLEModelUpdate,
+                 m: int,
+                 rmax: float):
         super().__init__(S, A, N, rho, gamma, U, planner)
         self.m = m # count threshold
         self.rmax = rmax # maximum reward
@@ -140,23 +162,27 @@ class RmaxMDP(MaximumLikelihoodMDP):
         if n < self.m:
             return self.rmax / (1 - self.gamma)
         r = self.rho[s, a] / n
-        T = lambda s, a, s_prime: self.N[s, a, s_prime] / n
+        def T(s, a, s_prime): return self.N[s, a, s_prime] / n
         return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def to_MDP(self) -> MDP:
         N_sa = np.sum(self.N, axis=2, keepdims=True)
-        T_matrix = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa >= self.m))
+        T = np.divide(self.N, N_sa, out=np.zeros_like(self.N), where=(N_sa >= self.m))
         N_sa = np.squeeze(N_sa)
-        R_matrix = np.divide(self.rho, N_sa, out=np.full_like(self.rho, self.rmax), where=(N_sa >= self.m)) 
+        R = np.divide(self.rho, N_sa, out=np.full_like(self.rho, self.rmax), where=(N_sa >= self.m)) 
         for s in np.where(N_sa < self.m)[0]:
-            T_matrix[s, :, s] = 1.0
-        T = lambda s, a, s_prime: T_matrix[s, a, s_prime]
-        R = lambda s, a: R_matrix[s, a]
-        TR = lambda s, a: (np.random.choice(len(self.S), p=T_matrix[s, a]), R(s, a))
-        return MDP(self.gamma, self.S, self.A, T, R, TR)
+            T[s, :, s] = 1.0
+        return MDP(self.gamma, self.S, self.A, T, R)
+
 
 class BayesianMDP(ModelBasedMDP):
-    def __init__(self, S: list[int], A: list[int], D: np.ndarray, R: Callable[[int, int], float], gamma: float, U: np.ndarray, planner: MLEModelUpdate):
+    def __init__(self,
+                 S: list[int],
+                 A: list[int],
+                 D: np.ndarray,
+                 R: Callable[[int, int], float],
+                 gamma: float, U: np.ndarray,
+                 planner: MLEModelUpdate):
         super().__init__(S, A, gamma, U, planner)
         self.D = D # Dirichlet distributions D[s, a]
         self.R = R # reward function as matrix (not estimated)
@@ -169,7 +195,7 @@ class BayesianMDP(ModelBasedMDP):
         if n == 0:
             return 0.0
         r = self.R(s, a)
-        T = lambda s, a, s_prime: self.D[s, a].alpha[s_prime] / n
+        def T(s, a, s_prime): return self.D[s, a].alpha[s_prime] / n
         return r + self.gamma * np.sum([T(s, a, s_prime)*self.U[s_prime] for s_prime in self.S])
 
     def update(self, s: int, a: int, r: float, s_prime: int):
@@ -179,10 +205,9 @@ class BayesianMDP(ModelBasedMDP):
         self.planner.update(self, s, a, r, s_prime)
 
     def sample(self) -> MDP:
-        T_matrix = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
-        T = lambda s, a, s_prime: T_matrix[s, a, s_prime]
-        TR = lambda s, a: (np.random.choice(len(self.S), p=T_matrix[s, a]), self.R(s, a))
-        return MDP(self.gamma, self.S, self.A, T, self.R, TR)      
+        T = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
+        return MDP(self.gamma, self.S, self.A, T, self.R)      
+
 
 class PosteriorSamplingUpdate(ModelUpdateScheme):
     def __init__(self):
