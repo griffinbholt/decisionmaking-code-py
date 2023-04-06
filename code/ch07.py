@@ -4,20 +4,21 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
+
 class MDP():
-    def __init__(self, 
-                 gamma: float, 
-                 S: list[Any], 
-                 A: list[Any], 
+    def __init__(self,
+                 gamma: float,
+                 S: list[Any],
+                 A: list[Any],
                  T: Callable[[Any, Any, Any], float],
-                 R: Callable[[Any, Any], float], 
+                 R: Callable[[Any, Any], float],
                  TR: Callable[[Any, Any], tuple[Any, float]]):
-        self.gamma = gamma # discount factor
-        self.S = S # state space
-        self.A = A # action space
-        self.T = T # transition function
-        self.R = R # reward function
-        self.TR = TR # sample next state and reward given current state and action: s', r = TR(s, a)
+        self.gamma = gamma  # discount factor
+        self.S = S          # state space
+        self.A = A          # action space
+        self.T = T          # transition function
+        self.R = R          # reward function
+        self.TR = TR        # sample next state and reward given current state and action: s', r = TR(s, a)
 
     def lookahead(self, U: Callable[[Any], float] | np.ndarray, s: Any, a: Any) -> float:
         if callable(U):
@@ -47,8 +48,7 @@ class MDP():
     def randstep(self, s: Any, a: Any) -> tuple[Any, float]:
         return self.TR(s, a)
 
-    # TODO - Create test
-    def simulate(self, s: Any, policy: Callable[[Any], Any], d: int) -> list[tuple[Any, Any, float]]:
+    def simulate(self, s: Any, policy: Callable[[Any], Any], d: int) -> list[tuple[Any, Any, float]]: # TODO - Create test
         trajectory = []
         for _ in range(d):
             a = policy(s)
@@ -57,24 +57,29 @@ class MDP():
             s = s_prime
         return trajectory
 
+
 class ValueFunctionPolicy():
     def __init__(self, P: MDP, U: Callable[[Any], float] | np.ndarray):
-        self.P = P # problem
-        self.U = U # utility function
+        self.P = P  # problem
+        self.U = U  # utility function
 
     def __call__(self, s: Any) -> Any:
         return self.P.greedy(self.U, s)[0]
 
+
 class SolutionMethod(ABC):
     pass
+
 
 class OfflinePlanningMethod(SolutionMethod):
     @abstractmethod
     def solve(self, P: MDP) -> Callable[[Any], Any]:
         pass
 
+
 class ExactSolutionMethod(OfflinePlanningMethod):
     pass
+
 
 class PolicyIteration(ExactSolutionMethod):
     def __init__(self, initial_policy: Callable[[Any], Any], k_max: int):
@@ -91,6 +96,7 @@ class PolicyIteration(ExactSolutionMethod):
             policy = policy_prime
         return policy
 
+
 class ValueIteration(ExactSolutionMethod):
     def __init__(self, k_max: int):
         self.k_max = k_max
@@ -100,6 +106,7 @@ class ValueIteration(ExactSolutionMethod):
         for _ in range(self.k_max):
             U = np.array([P.backup(U, s) for s in P.S])
         return ValueFunctionPolicy(P, U)
+
 
 class GaussSeidelValueIteration(ExactSolutionMethod):
     def __init__(self, k_max: int):
@@ -111,6 +118,7 @@ class GaussSeidelValueIteration(ExactSolutionMethod):
             for i, s in enumerate(P.S):
                 U[i] = P.backup(U, s)
         return ValueFunctionPolicy(P, U)
+
 
 class LinearProgramFormulation(ExactSolutionMethod):
     def solve(self, P: MDP) -> Callable[[Any], Any]:
@@ -130,21 +138,23 @@ class LinearProgramFormulation(ExactSolutionMethod):
         T_prime = np.array([[[P.T(s, a, s_prime) for s_prime in S_prime] for a in P.A] for s in P.S])
         return S_prime, A_prime, R_prime, T_prime
 
+
 class LinearQuadraticProblem():
     def __init__(self, Ts: np.ndarray, Ta: np.ndarray, Rs: np.ndarray, Ra: np.ndarray, h_max: int):
-        assert np.all(np.linalg.eigvals(Rs) <= 0), "Rs must be NSD" # TODO - not most numerically safe method
-        assert np.all(np.linalg.eigvals(Ra) < 0), "Ra must be ND" # TODO - not most numerically safe method
-        self.Ts = Ts # transition matrix with respect to state
-        self.Ta = Ta # transition matrix with respect to action
-        self.Rs = Rs # reward matrix with respect to state (negative semidefinite)
-        self.Ra = Ra # reward matrix with respect to action (negative definite)
-        self.h_max = h_max # horizon
+        assert np.all(np.linalg.eigvals(Rs) <= 0), "Rs must be NSD"  # TODO - not most numerically safe method
+        assert np.all(np.linalg.eigvals(Ra) < 0), "Ra must be ND"  # TODO - not most numerically safe method
+        self.Ts = Ts        # transition matrix with respect to state
+        self.Ta = Ta        # transition matrix with respect to action
+        self.Rs = Rs        # reward matrix with respect to state (negative semidefinite)
+        self.Ra = Ra        # reward matrix with respect to action (negative definite)
+        self.h_max = h_max  # horizon
 
-    def solve(self) -> list[np.ndarray]:# -> list[Callable[[np.ndarray], np.ndarray]]:
+    def solve(self) -> list[Callable[[np.ndarray], np.ndarray]]:
+        Ts, Ta, Rs, Ra = self.Ts, self.Ta, self.Rs, self.Ra
         V = np.zeros(self.Rs.shape)
         policies = [lambda s: np.zeros(self.Ta.shape[1])]
         for _ in range(1, self.h_max):
-            V = self.Ts.T @ (V - V @ self.Ta @ (np.linalg.inv(self.Ta.T @ V @ self.Ta + self.Ra) @ (self.Ta.T @ V))) @ self.Ts + self.Rs # TODO - Check math
-            L = -np.linalg.inv(self.Ta.T @ V @ self.Ta + self.Ra) @ self.Ta.T @ V @ self.Ts # TODO - Check math
+            V = (Ts.T @ (V - (V @ Ta @ (np.linalg.inv(Ta.T @ V @ Ta + Ra) @ (Ta.T @ V)))) @ Ts) + Rs
+            L = -np.linalg.inv(Ta.T @ V @ Ta + Ra) @ Ta.T @ V @ Ts
             policies.append(lambda s, L=L: L @ s)
         return policies

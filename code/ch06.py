@@ -3,8 +3,14 @@ import numpy as np
 from ch02 import Variable, Assignment, BayesianNetwork, assignments
 from ch03 import DiscreteInferenceMethod
 
+
 class SimpleProblem():
-    def __init__(self, bn: BayesianNetwork, chance_vars: list[Variable], decision_vars: list[Variable], utility_vars: list[Variable], utilities: dict[str, np.ndarray]):
+    def __init__(self, 
+                 bn: BayesianNetwork, 
+                 chance_vars: list[Variable], 
+                 decision_vars: list[Variable], 
+                 utility_vars: list[Variable], 
+                 utilities: dict[str, np.ndarray]):
         self.bn = bn
         self.chance_vars = chance_vars
         self.decision_vars = decision_vars
@@ -13,7 +19,7 @@ class SimpleProblem():
 
     def solve(self, evidence: Assignment, M: DiscreteInferenceMethod) -> tuple[Assignment, float]:
         query = [var.name for var in self.utility_vars]
-        U = lambda a: np.sum([self.utilities[uname][a[uname]] for uname in query])
+        def U(a: Assignment): return np.sum([self.utilities[uname][a[uname]] for uname in query])
         best_a, best_u = None, -np.inf
         for assignment in assignments(self.decision_vars):
             evidence = Assignment(evidence | assignment)
@@ -32,3 +38,4 @@ class SimpleProblem():
             p = phi.table[o_prime]
             voi += p*(self.solve(o_o_prime, M)[1])
         return voi
+    

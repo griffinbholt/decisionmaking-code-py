@@ -68,7 +68,7 @@ class LocalDirectedGraphSearch(DirectedGraphSearchMethod):
         for k in range(self.k_max):
             graph_prime = self.rand_graph_neighbor(graph)
             if len(list(nx.simple_cycles(graph_prime))) == 0:
-                y_prime = bayesian_score(variables, graph_prime, data) 
+                y_prime = bayesian_score(variables, graph_prime, data)
             else:
                 y_prime = -np.inf
             if y_prime > y:
@@ -89,14 +89,16 @@ class LocalDirectedGraphSearch(DirectedGraphSearchMethod):
 
 
 def are_markov_equivalent(G: nx.DiGraph, H: nx.DiGraph) -> bool:
-    if ((G.number_of_nodes() != H.number_of_nodes()) or 
-        (G.number_of_edges() != H.number_of_edges()) or 
-        (not all([(H.has_edge(e[0], e[1]) or H.has_edge(e[1], e[0])) for e in G.edges]))):
+    if ((G.number_of_nodes() != H.number_of_nodes()) or
+    (G.number_of_edges() != H.number_of_edges()) or
+    (not all([(H.has_edge(e[0], e[1]) or H.has_edge(e[1], e[0])) for e in G.edges]))):
         return False
     for (I, J) in [(G, H), (H, G)]:
         for c in range(I.number_of_nodes()):
             parents = list(I.predecessors(c))
             for a, b in itertools.combinations(parents, 2):
-                if (not I.has_edge(a, b)) and (not I.has_edge(b, a)) and (not (J.has_edge(a, c) and J.has_edge(b, c))):
+                if (not I.has_edge(a, b)) and 
+                (not I.has_edge(b, a)) and 
+                (not (J.has_edge(a, c) and J.has_edge(b, c))):
                     return False
     return True
