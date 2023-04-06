@@ -8,15 +8,17 @@ from typing import Callable
 from ch07 import MDP
 from convenience import normalize
 
+
 class ImitationLearning(ABC):
     def optimize(self, **kwargs):
         pass
 
+
 class BehavioralCloning(ImitationLearning):
     def __init__(self, alpha: float, k_max: int, grad_ll: Callable[[np.ndarray, int, int], float]):
-        self.alpha = alpha # step size
-        self.k_max = k_max # number of iterations
-        self.grad_ll = grad_ll # log likelihood gradient - function of (theta, a, s)
+        self.alpha = alpha      # step size
+        self.k_max = k_max      # number of iterations
+        self.grad_ll = grad_ll  # log likelihood gradient - function of (theta, a, s)
 
     def optimize(self, D: list[tuple[int, int]], theta: np.ndarray) -> np.ndarray:
         for _ in range(self.k_max):
@@ -24,20 +26,27 @@ class BehavioralCloning(ImitationLearning):
             theta += self.alpha * gradient
         return theta
 
-class DataSetAggregation(ImitationLearning):
-    def __init__(self, P: MDP, bc: BehavioralCloning, k_max: int, m: int, d: int, b: np.ndarray, 
-                 expert_policy: Callable[[int], int], 
-                 param_policy: Callable[[np.ndarray, int], int]):
-        self.P = P # problem with unknown reward function
-        self.bc = bc # behavioral cloning instance
-        self.k_max = k_max # number of iterations
-        self.m = m # number of rollouts per iteration
-        self.d = d # rollout depths
-        self.b = b # initial state distribution
-        self.expert_policy = expert_policy # expert
-        self.param_policy = param_policy # parametrized policy
 
-    def optimize(self, D: list[tuple[int | float | np.ndarray, int | float | np.ndarray]], theta: np.ndarray) -> np.ndarray:
+class DataSetAggregation(ImitationLearning):
+    def __init__(self,
+                 P: MDP,
+                 bc: BehavioralCloning,
+                 k_max: int,
+                 m: int,
+                 d: int,
+                 b: np.ndarray,
+                 expert_policy: Callable[[int], int],
+                 param_policy: Callable[[np.ndarray, int], int]):
+        self.P = P                          # problem with unknown reward function
+        self.bc = bc                        # behavioral cloning instance
+        self.k_max = k_max                  # number of iterations
+        self.m = m                          # number of rollouts per iteration
+        self.d = d                          # rollout depths
+        self.b = b                          # initial state distribution
+        self.expert_policy = expert_policy  # expert
+        self.param_policy = param_policy    # parametrized policy
+
+    def optimize(self, D: list[tuple[int, int]], theta: np.ndarray) -> np.ndarray:
         theta = self.bc.optimize(D, theta)
         for _ in range(self.k_max - 1):
             for _ in range(self.m):
@@ -49,19 +58,27 @@ class DataSetAggregation(ImitationLearning):
             theta = self.bc.optimize(D, theta)
         return theta
 
+
 class SMILe(ImitationLearning):
-    def __init__(self, P: MDP, bc: BehavioralCloning, k_max: int, m: int, d: int, b: np.ndarray, beta: float,
-                 expert_policy: Callable[[int], int], 
+    def __init__(self,
+                 P: MDP,
+                 bc: BehavioralCloning,
+                 k_max: int,
+                 m: int,
+                 d: int,
+                 b: np.ndarray,
+                 beta: float,
+                 expert_policy: Callable[[int], int],
                  param_policy: Callable[[np.ndarray, int], int]):
-        self.P = P # problem with unknown reward function
-        self.bc = bc # behavioral cloning instance
-        self.k_max = k_max # number of iterations
-        self.m = m # number of rollouts per iteration
-        self.d = d # rollout depths
-        self.b = b # initial state distribution
-        self.beta = beta # mixing scalar (e.g., d^-3)
-        self.expert_policy = expert_policy # expert
-        self.param_policy = param_policy # parametrized policy
+        self.P = P                          # problem with unknown reward function
+        self.bc = bc                        # behavioral cloning instance
+        self.k_max = k_max                  # number of iterations
+        self.m = m                          # number of rollouts per iteration
+        self.d = d                          # rollout depths
+        self.b = b                          # initial state distribution
+        self.beta = beta                    # mixing scalar (e.g., d^-3)
+        self.expert_policy = expert_policy  # expert
+        self.param_policy = param_policy    # parametrized policy
 
     def optimize(self, theta: np.ndarray) -> tuple[np.ndarray, list[np.ndarray]]:
         thetas = []
@@ -90,17 +107,27 @@ class SMILe(ImitationLearning):
         probs = normalize(np.array([(1 - self.beta)**i for i in range(self.k_max)]), order=1)
         return probs, thetas
 
+
 class InverseReinforcementLearning(ImitationLearning):
-    def __init__(self, P: MDP, b: np.ndarray, d: int, m: int, policy: Callable[[np.ndarray, int], int], beta: Callable[[int, int], np.ndarray], mu_E: np.ndarray, RL, epsilon: float):
-        self.P = P # problem
-        self.b = b # initial state distribution
-        self.d = d # depth
-        self.m = m # number of samples
-        self.policy = policy # parametrized policy
-        self.beta = beta # binary feature mapping
-        self.mu_E = mu_E # expert feature expectations
-        self.RL = RL # reinforcement learning method # TODO - The RL method is unclear - What exactly is it?
-        self.epsilon = epsilon # tolerance
+    def __init__(self,
+                 P: MDP,
+                 b: np.ndarray,
+                 d: int,
+                 m: int,
+                 policy: Callable[[np.ndarray, int], int],
+                 beta: Callable[[int, int], np.ndarray],
+                 mu_E: np.ndarray,
+                 RL,  # TODO - The RL method is unclear - What exactly is it?
+                 epsilon: float):
+        self.P = P              # problem
+        self.b = b              # initial state distribution
+        self.d = d              # depth
+        self.m = m              # number of samples
+        self.policy = policy    # parametrized policy
+        self.beta = beta        # binary feature mapping
+        self.mu_E = mu_E        # expert feature expectations
+        self.RL = RL            # reinforcement learning method
+        self.epsilon = epsilon  # tolerance
 
     def optimize(self, theta: np.ndarray) -> tuple[np.ndarray, list[np.ndarray]]:
         thetas = [theta]
@@ -118,7 +145,7 @@ class InverseReinforcementLearning(ImitationLearning):
 
     def feature_expectations(self, policy: Callable[[int], int]) -> float:
         gamma = self.P.gamma
-        mu = lambda tau: np.sum([(gamma**k) * self.beta(s, a) for (k, (s, a)) in enumerate(tau)], axis=1) # TODO - Check axis
+        def mu(tau): return np.sum([(gamma**k) * self.beta(s, a) for (k, (s, a)) in enumerate(tau)], axis=1) # TODO - Check axis
         trajs = [self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy, self.d) for _ in range(self.m)]
         return np.mean([mu(tau) for tau in trajs], axis=1) # TODO - Check axis
 
@@ -143,6 +170,7 @@ class InverseReinforcementLearning(ImitationLearning):
         problem = cp.Problem(objective, constraints)
         problem.solve()
         return lam.value
-    
+
+
 class MaximumEntropyIRL(ImitationLearning):
     pass # TODO
