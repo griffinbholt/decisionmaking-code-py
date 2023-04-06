@@ -3,6 +3,7 @@ import sys; sys.path.append('../')
 
 from ch07 import LinearQuadraticProblem
 
+
 # Example 7.4: Solving a finite horizon MDP with linear transition function & quadratic award
 def example_7_4():
     t_step = 1
@@ -14,7 +15,7 @@ def example_7_4():
 
     lqp = LinearQuadraticProblem(Ts, Ta, Rs, Ra, h_max)
     opt_policies = lqp.solve()
-    
+
     s = np.array([-10, 0])
     for i in range(h_max):
         a = opt_policies[i](s)

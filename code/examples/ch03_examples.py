@@ -37,7 +37,7 @@ def example_3_3():
 
 
 # Example 3.5: Direct Sampling
-# Note: The samples drawn here are drawn from the factors in Ex. 2.5, 
+# Note: The samples drawn here are drawn from the factors in Ex. 2.5,
 # and will be different than those in the textbook
 # I also changed the number of samples from 10 to 1000 to make it more interesting
 def example_3_5():
@@ -50,7 +50,7 @@ def example_3_5():
 
 
 # Example 3.6: Likelihood Weighted Sampling
-# Note: The samples drawn here are drawn from the factors in Ex. 2.5, 
+# Note: The samples drawn here are drawn from the factors in Ex. 2.5,
 # and will be different than those in the textbook.
 # I also changed the number of samples from 5 to 1000 to make it more interesting
 def example_3_6():
@@ -68,9 +68,9 @@ def example_3_7():
     mean = np.array([0, 1])
     cov = np.array([[3, 1], [1, 2]])
     D = multivariate_normal(mean, cov)
-    
+
     # Query: x_1
-    query = np.array([0]) 
+    query = np.array([0])
 
     # Evidence: x_2 = 2.0
     evidence_vars = np.array([1])
