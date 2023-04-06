@@ -59,7 +59,7 @@ def branch_and_bound(P: MDP, s: Any, d: int,
                      Q_hi: Callable[[Any, Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U_lo(s))
-    
+
     def U_prime(s: Any): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
     best = (None, -np.inf)  # TODO - Decide if split up or not
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
