@@ -1,15 +1,18 @@
 import itertools
 import networkx as nx
 import numpy as np
+
 from functools import reduce
+
 
 class Variable():
     def __init__(self, name: str, r: int):
         self.name = name
-        self.r = r # number of possible values
+        self.r = r  # number of possible values
 
     def __str__(self):
         return "(" + self.name + ", " + str(self.r) + ")"
+
 
 """
 Assignment: A mapping from variable names (str) to integer values (int)
@@ -26,6 +29,7 @@ class Assignment(dict[str, int]):
         result.update(self)
         return result
 
+
 """
 FactorTable: A mapping from assignments (Assignment) to values (float)
 """
@@ -39,6 +43,7 @@ class FactorTable(dict[Assignment, float]):
             table_str += str(key) + ": " + str(dict.__getitem__(self, key)) + "\n"
         table_str = table_str[:-1]
         return table_str
+
 
 class Factor():
     def __init__(self, variables: list[Variable], table: FactorTable):
@@ -84,6 +89,7 @@ class Factor():
     def prod(factors: list['Factor']) -> 'Factor':
         return reduce(lambda phi_1, phi_2: phi_1 * phi_2, factors)
 
+
 def assignments(variables: list[Variable]) -> list[Assignment]:
     names = [var.name for var in variables]
     return [Assignment(zip(names, values)) for values in itertools.product(*[[i for i in range(var.r)] for var in variables])]
@@ -102,6 +108,7 @@ def marginalize(phi: Factor, name: str) -> Factor:
     variables = [var for var in phi.variables if var.name is not name]
     return Factor(variables, table)
 
+
 def condition_single(phi: Factor, name: str, value: int) -> Factor:
     if not phi.in_scope(name):
         return phi
@@ -114,10 +121,12 @@ def condition_single(phi: Factor, name: str, value: int) -> Factor:
     variables = [var for var in phi.variables if var.name is not name]
     return Factor(variables, table)
 
+
 def condition_multiple(phi: Factor, evidence: Assignment) -> Factor:
     for name, value in evidence.items():
         phi = condition_single(phi, name, value)
     return phi
+
 
 class BayesianNetwork():
     def __init__(self, variables: list[Variable], factors: list[Factor], graph: nx.DiGraph):
@@ -126,8 +135,8 @@ class BayesianNetwork():
         self.graph = graph
 
     def probability(self, assignment: Assignment) -> float:
-        subassignment = lambda phi : assignment.select(phi.variable_names)
-        prob = lambda phi : phi.table.get(subassignment(phi), default_val=0.0)
+        def subassignment(phi: Factor): return assignment.select(phi.variable_names)
+        def prob(phi: Factor): return phi.table.get(subassignment(phi), default_val=0.0)
         return np.prod([prob(phi) for phi in self.factors])
 
     def sample(self) -> Assignment:
