@@ -54,11 +54,12 @@ class ForwardSearch(OnlinePlanningMethod):
         return (forward_search(self.P, s, self.d, self.U))[0]
 
 
-def branch_and_bound(P: MDP, s: Any, d: int, 
-                     U_lo: Callable[[Any], float], 
+def branch_and_bound(P: MDP, s: Any, d: int,
+                     U_lo: Callable[[Any], float],
                      Q_hi: Callable[[Any, Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U_lo(s))
+    
     def U_prime(s: Any): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
     best = (None, -np.inf)  # TODO - Decide if split up or not
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
@@ -170,19 +171,19 @@ class HeuristicSearch(OnlinePlanningMethod):
     def simulate(self, U: np.ndarray, s: int | np.ndarray):
         for _ in range(self.d):
             a, u = self.P.greedy(U, s)
-            U[s] = u 
+            U[s] = u
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
 
 
 class LabeledHeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, delta: float):
-        self.P = P          # problem 
+        self.P = P          # problem
         self.U_hi = U_hi    # upper bound on value function
         self.d = d          # depth
         self.delta = delta  # gap threshold
 
     def __call__(self, s: int | np.ndarray) -> Any:
-        U, solved = np.array([self.U_hi(s) for s in self.P.S]), set() 
+        U, solved = np.array([self.U_hi(s) for s in self.P.S]), set()
         while s not in solved:
             self.simulate(U, solved, s)
         return self.P.greedy(U, s)[0]
@@ -194,12 +195,12 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
                 break
             visited.append(s)
             a, u = self.P.greedy(U, s)
-            U[s] = u 
+            U[s] = u
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
         while len(visited) != 0:
             if self.label(U, solved, visited.pop()):
                 break
-        
+
     def label(self, U: np.ndarray, solved: set[int] | set[np.ndarray], s: int | np.ndarray):
         if s in solved:
             return False
@@ -215,9 +216,9 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
                s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
         found, to_expand, envelope = False, {s}, []
         while len(to_expand) != 0:
-            s = to_expand.pop() # TODO - set.pop() removes a random element, whereas it is unknown what Julia's pop!(set) removes
+            s = to_expand.pop()  # TODO - set.pop() removes a random element, whereas it is unknown what Julia's pop!(set) removes
             envelope.append(s)
-            a, u  = self.P.greedy(U, s)
+            a, u = self.P.greedy(U, s)
             if np.abs(U[s] - u) > self.delta:
                 found = True
             else:
