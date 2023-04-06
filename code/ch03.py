@@ -128,7 +128,7 @@ class GibbsSampling(DiscreteInferenceMethod):
     @staticmethod
     def blanket(bn: BayesianNetwork, a: Assignment, i: int) -> Factor:
         name = bn.variables[i].name
-        value = a[name] # TODO - F841 local variable 'value' is assigned to but never used (Talk to Mykel & Tim about this)
+        value = a[name]  # TODO - F841 local variable 'value' is assigned to but never used (Talk to Mykel & Tim about this)
         a_prime = a.copy()
         del a_prime[name]
         factors = [phi for phi in bn.factors if phi.in_scope(name)]
@@ -144,10 +144,10 @@ class MultivariateGaussianInference(InferenceMethod):
         evidencevars: NumPy array of integers specifying the evidence variables
         evidence: NumPy array containing the values of the evidence variables
     """
-    def infer(self, 
-              D: multivariate_normal, 
-              query: np.ndarray, 
-              evidence_vars: np.ndarray, 
+    def infer(self,
+              D: multivariate_normal,
+              query: np.ndarray,
+              evidence_vars: np.ndarray,
               evidence: np.ndarray) -> multivariate_normal:
         mu, Sigma = D.mean, D.cov
         b, mu_a, mu_b = evidence, mu[query], mu[evidence_vars]
