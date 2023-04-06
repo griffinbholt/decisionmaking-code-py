@@ -26,7 +26,10 @@ class FiniteDifferenceGradient(PolicyGradientEstimationMethod):
         n = len(theta)
         def delta_theta(i): np.array([self.delta if i == k else 0.0 for k in range(n)])
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
-        def U(theta_prime): return np.mean([R(self.P.simulate(random.choices(self.P.S, weights=self.b)[0], lambda s: policy(theta_prime, s), self.d)) for i in range(self.m)])
+        def U(theta_prime):  # TODO - Rethink naming conventions
+            def pi(s): return policy(theta_prime, s)
+            def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
+            return np.mean([R(tau()) for i in range(self.m)])
         grad_U = np.array([(U(theta + delta_theta(i)) - U(theta)) for i in range(n)])
         return grad_U / self.delta
 
@@ -42,9 +45,12 @@ class RegressionGradient(PolicyGradientEstimationMethod):
     def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray) -> np.ndarray:
         delta_theta = self.delta * normalize(np.randn(self.m, len(theta)), ord=2, axis=1, keepdims=True)
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
-        def U(theta_prime): return R(self.P.simulate(random.choices(self.P.S, weights=self.b)[0], lambda s: policy(theta_prime, s), self.d))
+        def U(theta_prime):  # TODO - Rethink naming conventions
+            def pi(s): return policy(theta_prime, s)
+            def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
+            return R(tau())
         grad_U = np.array([(U(theta + row) - U(theta)) for row in delta_theta])
-        return np.linalg.solve(delta_theta.T @ delta_theta, delta_theta.T @ grad_U)  # Most numerically stable method for least squares in numpy
+        return np.linalg.solve(delta_theta.T @ delta_theta, delta_theta.T @ grad_U)
 
 
 class LikelihoodRatioGradient(PolicyGradientEstimationMethod):
@@ -60,7 +66,8 @@ class LikelihoodRatioGradient(PolicyGradientEstimationMethod):
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
         def grad_log(tau): return np.sum([self.grad_ll(theta, a, s) for (s, a, r) in tau])
         def grad_U(tau): return grad_log(tau) * R(tau)  # TODO - Maybe there is a bug in the textbook (I found two others - need to go back and find them)
-        trajs = [self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d) for _ in range(self.m)]
+        def traj(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)
+        trajs = [traj() for _ in range(self.m)]
         avg_grad = np.mean([grad_U(tau) for tau in trajs])  # TODO - Check the dimension of this answer
         if return_FIM:
             def F(tau): return np.outer(grad_log(tau), grad_log(tau))
@@ -80,7 +87,8 @@ def RewardToGoGradient(PolicyGradientEstimationMethod):
         def policy_theta(s): return policy(theta, s)
         def R(tau, j): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in zip(range(j, self.d + 1), tau[j:])])  # TODO - Note, this might be a bug, if range(j, self.d + 1) and tau[j:] are not same length
         def grad_U(tau): return np.sum([self.grad_ll(theta, a, s) * R(tau, j) for (j, (s, a, r)) in enumerate(tau)])
-        return np.mean([grad_U(self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)) for _ in range(self.m)])  # TODO - Check the dimension of this answer
+        def traj(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)
+        return np.mean([grad_U(traj()) for _ in range(self.m)])  # TODO - Check the dimension of this answer
 
 
 def BaselineSubtractionGradient(PolicyGradientEstimationMethod):
@@ -98,7 +106,8 @@ def BaselineSubtractionGradient(PolicyGradientEstimationMethod):
         def numer(tau): return np.sum([(ell(a, s, k)**2)*R(tau, k) for (k, (s, a, r)) in enumerate(tau)])
         def denom(tau): return np.sum([ell(a, s, k)**2 for (k, (s, a, r)) in enumerate(tau)])  # TODO - Maybe another bug in Julia?
         def base(tau): return np.divide(numer(tau), denom(tau))
-        trajs = [self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d) for _ in range(self.m)]
+        def traj(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)
+        trajs = [traj() for _ in range(self.m)]
         rbase = np.mean([base(tau) for tau in trajs])
         def grad_U(tau): return np.sum([(ell(a, s, k) * (R(tau, k) - rbase)) for (k, (s, a, r)) in enumerate(tau)])
         return np.mean([grad_U(tau) for tau in trajs])  # TODO - Check the dimension of this answer
