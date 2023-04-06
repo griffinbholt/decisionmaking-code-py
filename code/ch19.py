@@ -6,13 +6,13 @@ from convenience import normalize
 
 
 class POMDP():
-    def __init__(self, 
-                 gamma: float, 
-                 S: list[Any], 
-                 A: list[Any], 
+    def __init__(self,
+                 gamma: float,
+                 S: list[Any],
+                 A: list[Any],
                  O_space: list[Any],
                  T: Callable[[Any, Any, Any], float],
-                 R: Callable[[Any, Any], float], 
+                 R: Callable[[Any, Any], float],
                  O: Callable[[Any, Any, Any], float],
                  TRO: Callable[[Any, Any], tuple[Any, float, Any]]):
         self.gamma = gamma      # discount factor
@@ -57,7 +57,7 @@ class KalmanFilter():
 
     def _update_step(self, P: POMDP, o: np.ndarray,
                      mu_p: np.ndarray, Sigma_p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        Os, Sigma_o = P.Os, P.Sigma_o         
+        Os, Sigma_o = P.Os, P.Sigma_o
         Sigma_po = Sigma_p @ Os.T
         K = np.linalg.solve(Sigma_po, ((Os @ Sigma_p @ Os.T) + Sigma_o))
         mu_b_prime = mu_p + K @ (o - (Os @ mu_p))
@@ -77,8 +77,8 @@ class ExtendedKalmanFilter(KalmanFilter):
         return ExtendedKalmanFilter(mu_b_prime, Sigma_b_prime)
 
     def _predict_step(self, P: POMDP, a: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        pass # TODO
+        pass  # TODO
 
-    def _update_step(self, P: POMDP, o: np.ndarray, 
+    def _update_step(self, P: POMDP, o: np.ndarray,
                      mu_p: np.ndarray, Sigma_p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        pass # TODO
+        pass  # TODO

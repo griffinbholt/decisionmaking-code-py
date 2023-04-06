@@ -10,6 +10,7 @@ from convenience import normalize
 
 
 class ImitationLearning(ABC):
+    @abstractmethod
     def optimize(self, **kwargs):
         pass
 
@@ -50,10 +51,10 @@ class DataSetAggregation(ImitationLearning):
         theta = self.bc.optimize(D, theta)
         for _ in range(self.k_max - 1):
             for _ in range(self.m):
-                s = random.choices(self.P.S, weights=self.b)[0] # TODO - Check with Mykel & Tim about this - what form is the state distribution?
+                s = random.choices(self.P.S, weights=self.b)[0]  # TODO - Check with Mykel & Tim about this - what form is the state distribution?
                 for _ in range(self.d):
                     D.append((s, self.expert_policy(s)))
-                    a = random.choices(self.P.A, weights=self.param_policy(theta, s))[0] # TODO - Check with Mykel & Tim about this structure
+                    a = random.choices(self.P.A, weights=self.param_policy(theta, s))[0]  # TODO - Check with Mykel & Tim about this structure
                     s = random.choices(self.P.S, weights=[self.P.T(s, a, s_prime) for s_prime in self.P.S])[0]
             theta = self.bc.optimize(D, theta)
         return theta
@@ -82,29 +83,29 @@ class SMILe(ImitationLearning):
 
     def optimize(self, theta: np.ndarray) -> tuple[np.ndarray, list[np.ndarray]]:
         thetas = []
-        policy = lambda s: self.expert_policy(s)
+        def policy(s): return self.expert_policy(s)
         for k in range(self.k_max):
             # Execute latest policy to get new data set D
             D = []
             for _ in range(self.m):
-                s = random.choices(self.P.S, weights=self.b)[0] # TODO - Check with Mykel & Tim about this - what form is the state distribution?
+                s = random.choices(self.P.S, weights=self.b)[0]  # TODO - Check with Mykel & Tim about this - what form is the state distribution?
                 for _ in range(self.d):
                     D.append((s, self.expert_policy(s)))
                     a = policy(s)
                     s = random.choices(self.P.S, weights=[self.P.T(s, a, s_prime)[0] for s_prime in self.P.S])
-            
+
             # Train the new policy classifier
             theta = self.bc.optimize(D, theta)
             thetas.append(theta)
 
             # Compute a new policy mixture
             P = normalize(np.array([(1 - self.beta)**i for i in range(k)]), ord=1)
-            def policy(s: int, k: int=k, P: np.ndarray=P) -> int: # T
+            def policy(s: int, k: int = k, P: np.ndarray = P) -> int:
                 if np.random.rand() < ((1 - self.beta)**k):
                     return self.expert_policy(s)
                 past_theta = thetas[np.random.choice(k, p=P)]
                 return random.choices(self.P.A, weights=self.param_policy(past_theta, s))[0]
-        probs = normalize(np.array([(1 - self.beta)**i for i in range(self.k_max)]), order=1)
+        probs = normalize(np.array([(1 - self.beta)**i for i in range(self.k_max)]), ord=1)
         return probs, thetas
 
 
@@ -136,7 +137,7 @@ class InverseReinforcementLearning(ImitationLearning):
             t, phi = self.calc_weighting(mus)
             if t <= self.epsilon:
                 break
-            np.copyto(self.RL.phi, phi) # R(s, a) = phi.T @ beta(s, a)
+            np.copyto(self.RL.phi, phi)  # R(s, a) = phi.T @ beta(s, a)
             theta = self.RL.optimize(self.policy, theta)
             thetas.append(theta)
             mus = np.vstack([mus, [self.feature_expectations(lambda s: self.policy(theta, s))]])
@@ -145,18 +146,16 @@ class InverseReinforcementLearning(ImitationLearning):
 
     def feature_expectations(self, policy: Callable[[int], int]) -> float:
         gamma = self.P.gamma
-        def mu(tau): return np.sum([(gamma**k) * self.beta(s, a) for (k, (s, a)) in enumerate(tau)], axis=1) # TODO - Check axis
+        def mu(tau): return np.sum([(gamma**k) * self.beta(s, a) for (k, (s, a)) in enumerate(tau)], axis=1)  # TODO - Check axis
         trajs = [self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy, self.d) for _ in range(self.m)]
-        return np.mean([mu(tau) for tau in trajs], axis=1) # TODO - Check axis
+        return np.mean([mu(tau) for tau in trajs], axis=1)  # TODO - Check axis
 
     def calc_weighting(self, mus: np.ndarray) -> tuple[float, np.ndarray]:
         # mus: each row of mus is mu_i
         t = cp.Variable()
         phi = cp.Variable((len(self.mu_E), 1))
         objective = cp.Maximize(t)
-        constraints = [phi >= 0, 
-                       cp.norm2(phi) <= 1,
-                       phi.T @ self.mu_E >= mus @ phi + t]
+        constraints = [phi >= 0, cp.norm2(phi) <= 1, phi.T @ self.mu_E >= mus @ phi + t]
         problem = cp.Problem(objective, constraints)
         problem.solve()
         return t.value, phi.value.T[0]
@@ -173,4 +172,4 @@ class InverseReinforcementLearning(ImitationLearning):
 
 
 class MaximumEntropyIRL(ImitationLearning):
-    pass # TODO
+    pass  # TODO

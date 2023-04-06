@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import random
 
 from collections import deque
@@ -13,20 +13,20 @@ class IncrementalEstimate():
         self.mu = mu        # mean estimate
         self.alpha = alpha  # learning rate function
         self.m = m          # number of updates
-    
+
     def update(self, x: float | np.ndarray):
         self.m += 1
         self.mu += self.alpha(self.m) * (x - self.mu)
 
 
 class ModelFreeMDP(RLMDP):
-    def __init__(self, 
-                 A: list[int], 
-                 gamma: float, 
-                 Q: np.ndarray | Callable[[np.ndarray, float, int], float], 
+    def __init__(self,
+                 A: list[int],
+                 gamma: float,
+                 Q: np.ndarray | Callable[[np.ndarray, float, int], float],
                  alpha: float):
         super().__init__(A, gamma)
-        # action value function, either as a numpy array Q[s, a] 
+        # action value function, either as a numpy array Q[s, a]
         # or a parametrized function Q(theta, s, a) (depending on method)
         self.Q = Q
         self.alpha = alpha  # learning rate
@@ -37,7 +37,7 @@ class QLearning(ModelFreeMDP):
         super().__init__(A, gamma, Q, alpha)
         # The action value function Q[s, a] is a numpy array
         self.S = S  # state space (assumes 1:nstates)
-        
+
     def lookahead(self, s: int, a: int):
         return self.Q[s, a]
 
@@ -46,7 +46,13 @@ class QLearning(ModelFreeMDP):
 
 
 class Sarsa(ModelFreeMDP):
-    def __init__(self, S: list[int], A: list[int], gamma: float, Q: np.ndarray, alpha: float, ell: tuple[int, int, float]):
+    def __init__(self,
+                 S: list[int],
+                 A: list[int],
+                 gamma: float,
+                 Q: np.ndarray,
+                 alpha: float,
+                 ell: tuple[int, int, float]):
         super().__init__(A, gamma, Q, alpha)
         # The action value function Q[s, a] is a numpy array
         self.S = S      # state space (assumes 1:nstates)
@@ -63,7 +69,15 @@ class Sarsa(ModelFreeMDP):
 
 
 class SarsaLambda(Sarsa):
-    def __init__(self, S: list[int], A: list[int], gamma: float, Q: np.ndarray, N: np.ndarray, alpha: float, lam: float, ell: tuple[int, int, float]):
+    def __init__(self,
+                 S: list[int],
+                 A: list[int],
+                 gamma: float,
+                 Q: np.ndarray,
+                 N: np.ndarray,
+                 alpha: float,
+                 lam: float,
+                 ell: tuple[int, int, float]):
         super().__init__(S, A, gamma, Q, alpha, ell)
         # The action value function Q[s, a] is a numpy array
         self.N = N      # trace
@@ -83,12 +97,17 @@ class SarsaLambda(Sarsa):
 
 
 class GradientQLearning(ModelFreeMDP):
-    def __init__(self, A: list[int], gamma: float, Q: Callable[[np.ndarray, float, int], float], grad_Q: Callable[[np.ndarray, float, int], float], theta: np.ndarray, alpha: float):
+    def __init__(self,
+                 A: list[int],
+                 gamma: float,
+                 Q: Callable[[np.ndarray, float, int], float],
+                 grad_Q: Callable[[np.ndarray, float, int], float],
+                 theta: np.ndarray, alpha: float):
         super().__init__(A, gamma, Q, alpha)
         # The action value function is parametrized Q(theta, s, a)
         self.grad_Q = grad_Q
         self.theta = theta
-    
+
     # Note that s can be a float, for continuous state spaces
     def lookahead(self, s: float, a: int):
         return self.Q(self.theta, s, a)
@@ -101,7 +120,16 @@ class GradientQLearning(ModelFreeMDP):
 
 
 class ReplayGradientQLearning(GradientQLearning):
-    def __init__(self, A: list[int], gamma: float, Q: Callable[[np.ndarray, float, int], float], grad_Q: Callable[[np.ndarray, float, int], float], theta: np.ndarray, alpha: float, buffer: deque, m: int, m_grad: int):
+    def __init__(self,
+                 A: list[int],
+                 gamma: float,
+                 Q: Callable[[np.ndarray, float, int], float],
+                 grad_Q: Callable[[np.ndarray, float, int], float],
+                 theta: np.ndarray,
+                 alpha: float,
+                 buffer: deque,
+                 m: int,
+                 m_grad: int):
         super().__init__(A, gamma, Q, grad_Q, theta, alpha)
         # The action value function is parametrized Q(theta, s, a)
         self.buffer = buffer  # circular memory buffer, in the form of a collections.deque object with maxlen capacity
@@ -110,7 +138,7 @@ class ReplayGradientQLearning(GradientQLearning):
 
     # Note that s, s_prime can be floats, for continuous state spaces
     def update(self, s: float, a: int, r: float, s_prime: float):
-        if len(self.buffer) == self.buffer.maxlen: # i.e., the buffer is full
+        if len(self.buffer) == self.buffer.maxlen:  # i.e., the buffer is full
             def U(s): return np.max([self.Q(self.theta, s, a) for a in self.A])
             def del_Q(s, a, r, s_prime):
                 return (r + (self.gamma * U(s_prime)) - self.Q(self.theta, s, a)) * self.grad_Q(self.theta, s, a)
