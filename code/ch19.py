@@ -47,7 +47,7 @@ class POMDP():
 
     def combine_lookahead(self, s: Any, a: Any, Vo: np.ndarray) -> float:
         S, O_space, T, O, R, gamma = self.S, self.O_space, self.T, self.O, self.R, self.gamma
-        def U_prime(s_prime, i): return np.sum([O(a, s_prime, o) * alpha[i] for (o, alpha) in zip(O, Vo)])
+        def U_prime(s_prime, i): return np.sum([O(a, s_prime, o) * alpha[i] for (o, alpha) in zip(O_space, Vo)])
         return R(s, a) + gamma * np.sum([T(s, a, s_prime) * U_prime(s_prime, i) for (i, s_prime) in enumerate(S)])
 
     def combine_alphavector(self, a: Any, Vo: np.ndarray) -> np.ndarray:
@@ -58,9 +58,9 @@ class POMDP():
         R, T, O = self.R, self.T, self.O
         dsf = DiscreteStateFilter(b)
         Va = []
-        for a in self.A:
+        for a in A:
             Vao = []
-            for o in self.O_space:
+            for o in O_space:
                 b_prime = dsf.update(self, a, o).b
                 idx = np.argmax([np.dot(alpha, b_prime) for alpha in V])
                 Vao.append(V[idx])
@@ -145,7 +145,7 @@ class UnscentedKalmanFilter(KalmanFilter):
     def update(self, P: POMDP, a: np.ndarray, o: np.ndarray) -> 'UnscentedKalmanFilter':
         pass  # TODO
 
-    def unscented_transform(self, mu, Sigma, f, ws): # TODO - Typing
+    def unscented_transform(self, mu, Sigma, f, ws):  # TODO - Typing
         pass  # TODO
 
 

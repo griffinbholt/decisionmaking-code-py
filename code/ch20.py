@@ -117,7 +117,7 @@ class ExactPlanningMethod(POMDPSolutionMethod):
 
 
 class ValueIteration(ExactPlanningMethod):
-    def __init__(self, k_max: int): # TODO - Maybe, it should inherit from Offline planning method? Or k_max should be in POMDP Solution Method?
+    def __init__(self, k_max: int):  # TODO - Maybe, it should inherit from Offline planning method? Or k_max should be in POMDP Solution Method?
         self.k_max = k_max
 
     def solve(self, P: POMDP) -> LookaheadAlphaVectorPolicy:
@@ -132,11 +132,10 @@ class ValueIteration(ExactPlanningMethod):
 
 
 def expand(plans: np.ndarray, V: np.ndarray, P: POMDP) -> tuple[np.ndarray, np.ndarray]:
-    S, A, O_space, T, O, R, gamma = P.S, P.A, P.O_space, P.T, P.O, P.R, P.gamma
     plans_prime, V_prime = np.array([]), np.array([])
-    for a in A:
+    for a in P.A:
         # Iterate over all possible mappings from observations to plans
-        for inds in itertools.product(*[[i for i in range(len(plans))] for o in O_space]):
+        for inds in itertools.product(*[[i for i in range(len(plans))] for o in P.O_space]):
             plans_o = plans[[inds]]
             Vo = V[[inds]]
             policy = ConditionalPlan.create_for(P, a, plans_o)

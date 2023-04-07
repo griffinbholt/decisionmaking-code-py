@@ -38,7 +38,7 @@ class QMDP(OfflinePlanningMethod):
                 exp_rewards = np.sum([T(s, a, s_prime) * np.max(alpha[j] for alpha in V) for (j, s_prime) in enumerate(S)])
                 V_prime[a, s] = R(s, a) + gamma * exp_rewards
         return V_prime
-    
+
     def solve(self, P: POMDP) -> AlphaVectorPolicy:
         V = np.zeros((len(P.A), len(P.S)))
         V = self.alphavector_iteration(P, V)
@@ -56,7 +56,7 @@ class FastInformedBound(OfflinePlanningMethod):
             for s in S:
                 V_prime[a, s] = R(s, a) + gamma * np.sum([np.max([np.sum([O(a, s_prime, o) * T(s, a, s_prime) * alpha[j] for (j, s_prime) in enumerate(S)]) for alpha in V]) for o in O_space])
         return V_prime
-    
+
     def solve(self, P: POMDP) -> AlphaVectorPolicy:
         V = np.zeros((len(P.A), len(P.S)))
         V = self.alphavector_iteration(P, V)
@@ -142,7 +142,7 @@ def SawtoothPolicy(POMDPPolicy):
         return self.greedy(b)[0]
 
 
-def SawtoothIteration(OfflinePlanningMethod): # TODO - Rethink having it inherit from Offline Planning Method
+def SawtoothIteration(OfflinePlanningMethod):  # TODO - Rethink having it inherit from Offline Planning Method
     def __init__(self, V: dict[np.ndarray, float], B: list[np.ndarray], k_max: int):
         super().__init__(k_max)
         self.V = V  # initial mapping from beliefs to utilities
@@ -179,7 +179,7 @@ def exploratory_belief_expansion(P: POMDP, B: list[np.ndarray]) -> list[np.ndarr
     return list(set(B_prime))
 
 
-class SawtoothHeuristicSearch(OfflinePlanningMethod): # TODO - Rethink having it inherit from Offline Planning Method
+class SawtoothHeuristicSearch(OfflinePlanningMethod):  # TODO - Rethink having it inherit from Offline Planning Method
     def __init__(self, b: np.ndarray, delta: float, d: int, k_max: int, k_fib: int):
         self.b = b          # initial belief
         self.delta = delta  # gap threshold
@@ -197,5 +197,5 @@ class SawtoothHeuristicSearch(OfflinePlanningMethod): # TODO - Rethink having it
 class TriangulatedPolicy(POMDPPolicy):
     pass  # TODO
 
-class TriangulatedIteration(OfflinePlanningMethod): # TODO - Rethink inheritance
+class TriangulatedIteration(OfflinePlanningMethod):  # TODO - Rethink inheritance
     pass
