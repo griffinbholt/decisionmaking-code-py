@@ -18,7 +18,12 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
-| 1-6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 1 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 2 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 3 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 4 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 5 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+| 6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌ 50% | All exact solution methods need to be tested |
 | 8 | ▌▌▌▌▌▌▌ 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
 | 9 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
@@ -32,6 +37,13 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 18 | ▌▌▌▌▌▌▌ 70% | 0% | `MaximumEntropyIRL` needs to be written |
 | 19 | ▌▌▌ 25% | 0% | I have only written `DiscreteStateFilter` and `KalmanFilter` |
-| 20-27 | 0% | 0% | Nothing written |
+| 20 | 0% | 0% | Nothing written |
+| 21 | 0% | 0% | Nothing written |
+| 22 | 0% | 0% | Nothing written |
+| 23 | 0% | 0% | Nothing written |
+| 24 | 0% | 0% | Nothing written |
+| 25 | 0% | 0% | Nothing written |
+| 26 | 0% | 0% | Nothing written |
+| 27 | 0% | 0% | Nothing written |
 
 I have also written code for pertinent examples and exercises through Chapter 7.
