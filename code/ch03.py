@@ -15,12 +15,21 @@ class InferenceMethod(ABC):
 
 
 class DiscreteInferenceMethod(InferenceMethod):
+    """
+    I introduce the DiscreteInferenceMethod superclass to allow `infer` to be called with different inference methods,
+    as shall be seen in the rest of this chapter.
+    """
     @abstractmethod
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
         pass
 
 
 class ExactInference(DiscreteInferenceMethod):
+    """
+    A naive exact inference algorithm for a discrete Bayesian network `bn`,
+    which takes as input a set of query variable names query and evidence associating values with observed variables.
+    The algorithm computes a joint distribution over the query variables in the form of a factor.
+    """
     def infer(self, bn: BayesianNetwork, query: list[str], evidence: Assignment) -> Factor:
         phi = Factor.prod(bn.factors)
         phi = condition_multiple(phi, evidence)
@@ -31,6 +40,11 @@ class ExactInference(DiscreteInferenceMethod):
 
 
 class VariableElimination(DiscreteInferenceMethod):
+    """
+    An implementation of the sum-product variable elimination algorithm,
+    which takes in a Bayesian network `bn`, a list of query variables `query`, and evidence `evidence`.
+    The variables are processed in the order given by `ordering`.
+    """
     def __init__(self, ordering: list[int]):
         self.ordering = ordering
 
@@ -52,6 +66,14 @@ class VariableElimination(DiscreteInferenceMethod):
 
 
 class DirectSampling(DiscreteInferenceMethod):
+    """
+    The direct sampling inference method, which takes a Bayesian network `bn`,
+    a list of query variables `query`, and evidence `evidence`.
+
+    The method draws `m` samples from the Bayesian network and retains those samples
+    that are consistent with the evidence. A factor over the query variables is returned. 
+    This method can fail if no samples that satisfy the evidence are found.
+    """
     def __init__(self, m):
         self.m = m
 
@@ -69,6 +91,14 @@ class DirectSampling(DiscreteInferenceMethod):
 
 
 class LikelihoodWeightedSampling(DiscreteInferenceMethod):
+    """
+    The likelihood weighted sampling inference method, which takes a Bayesian network `bn`,
+    a list of query variables `query`, and evidence `evidence`.
+
+    The method draws `m` samples from the Bayesian network but sets values from evidence when possible,
+    keeping track of the conditional probability when doing so. These probabilities are used to weight
+    the samples such that the final inference estimate is accurate. A factor over the query variables is returned.
+    """
     def __init__(self, m):
         self.m = m
 
@@ -92,7 +122,25 @@ class LikelihoodWeightedSampling(DiscreteInferenceMethod):
         return phi
 
 
+def blanket(bn: BayesianNetwork, a: Assignment, i: int) -> Factor:
+    """
+    A method for obtaining P(X_i | x_{-i}) for a Bayesian network `bn` given a current assignment `a`.
+    """
+    name = bn.variables[i].name
+    value = a[name]  # TODO - F841 local variable 'value' is assigned to but never used (Talk to Mykel & Tim about this)
+    a_prime = a.copy()
+    del a_prime[name]
+    factors = [phi for phi in bn.factors if phi.in_scope(name)]
+    phi = Factor.prod([condition_multiple(factor, a_prime) for factor in factors])
+    phi.normalize()
+    return phi
+
+
 class GibbsSampling(DiscreteInferenceMethod):
+    """
+    Gibbs sampling implemented for a Bayesian network `bn` with evidence `evidence` and an ordering `ordering`.
+    The method iteratively updates the assignment `a` for `m` iterations.
+    """
     def __init__(self, m_samples: int, m_burnin: int, m_skip: int, ordering: list[int]):
         self.m_samples = m_samples
         self.m_burnin = m_burnin
@@ -122,26 +170,17 @@ class GibbsSampling(DiscreteInferenceMethod):
         for i in ordering:
             name = bn.variables[i].name
             if name not in evidence:
-                b = GibbsSampling.blanket(bn, a, i)
+                b = blanket(bn, a, i)
                 a[name] = b.sample()[name]
-
-    @staticmethod
-    def blanket(bn: BayesianNetwork, a: Assignment, i: int) -> Factor:
-        name = bn.variables[i].name
-        value = a[name]  # TODO - F841 local variable 'value' is assigned to but never used (Talk to Mykel & Tim about this)
-        a_prime = a.copy()
-        del a_prime[name]
-        factors = [phi for phi in bn.factors if phi.in_scope(name)]
-        phi = Factor.prod([condition_multiple(factor, a_prime) for factor in factors])
-        phi.normalize()
-        return phi
 
 
 class MultivariateGaussianInference(InferenceMethod):
     """
+        Inference in a multivariate Gaussian distribution D.
+
         D: multivariate_normal object defined by scipy.stats
         query: NumPy array of integers specifying the query variables
-        evidencevars: NumPy array of integers specifying the evidence variables
+        evidence_vars: NumPy array of integers specifying the evidence variables
         evidence: NumPy array containing the values of the evidence variables
     """
     def infer(self,
