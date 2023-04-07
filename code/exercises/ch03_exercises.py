@@ -8,6 +8,7 @@ from ch03 import ExactInference, MultivariateGaussianInference
 
 
 def exercise_3_3():
+    """Exercise 3.3: Exact Inference on Object Detection System for Autonomous Vehicles"""
     idx_to_class = {0: "vehicle", 1: "pedestrian", 2: "ball"}
     C = Variable("c", 3)  # vehicle, pedestrian, ball
     S = Variable("s", 3)  # small, medium, large
@@ -39,8 +40,8 @@ def exercise_3_3():
     print("Predicted Classification: ", classification)
 
 
-# Exercise 3.7: Multivariate Gaussian Inference for Test Scores
 def exercise_3_7():
+    """Exercise 3.7: Multivariate Gaussian Inference for Test Scores"""
     # Joint Distribution of scores on math M, reading R, and writing W exames
     mean = np.array([81, 82, 80])
     cov = np.array([[25, -9, -16], [-9, 36, 16], [-16, 16, 36]])

@@ -8,7 +8,7 @@ from ch07 import MDP, PolicyIteration
 
 
 def exercise_7_5():
-    # Three-tile, Straight-Line Hexworld
+    """Exercise 7.5: Three-tile, Straight-Line Hexworld"""
     gamma = 0.9
     S = [1, 2, 3, "Terminating"]
     A = ["east", "northeast", "northwest", "west", "southwest", "southeast"]

@@ -6,9 +6,12 @@ from ch02 import Variable
 from ch04 import statistics
 
 
-# Exercise 4.4: MLEs of conditional distribution parameters for Bayesian network
-# Note: np.ravel_multi_index indexes the parental instantiations differently than sub2ind
 def exercise_4_4():
+    """
+    Exercise 4.4: MLEs of conditional distribution parameters for Bayesian network
+
+    Note: `np.ravel_multi_index` indexes the parental instantiations differently than the textbook's `sub2ind`
+    """
     graph = nx.DiGraph()
     graph.add_nodes_from(range(4))
     graph.add_edges_from([(0, 3), (3, 1), (2, 1)])

@@ -4,8 +4,8 @@ import sys; sys.path.append('../')
 from ch07 import LinearQuadraticProblem
 
 
-# Example 7.4: Solving a finite horizon MDP with linear transition function & quadratic award
 def example_7_4():
+    """Example 7.4: Solving a finite horizon MDP with a linear transition function and quadratic reward"""
     t_step = 1
     Ts = np.array([[1, t_step], [0, 1]])
     Ta = np.array([[0.5*(t_step**2)], [t_step]])

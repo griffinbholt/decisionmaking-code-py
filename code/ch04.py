@@ -17,7 +17,7 @@ def statistics(variables: list[Variable], graph: nx.DiGraph, data: np.ndarray) -
 
     ASSUMES DATA IS ZERO-INDEXED: instead of the entries begin classes {1, 2, 3}, they must be {0, 1, 2}
 
-    Note: np.ravel_multi_index indexes the parental instantiations differently than sub2ind
+    Note: `np.ravel_multi_index` indexes the parental instantiations differently than the textbook's `sub2ind`
     """
     n = len(variables)
     r = np.array([var.r for var in variables])
