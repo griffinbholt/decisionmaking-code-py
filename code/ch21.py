@@ -147,7 +147,7 @@ def SawtoothIteration(OfflinePlanningMethod):  # TODO - Rethink having it inheri
         super().__init__(k_max)
         self.V = V  # initial mapping from beliefs to utilities
         self.B = B  # beliefs to compute values including those in V map
-    
+
     def solve(self, P: POMDP) -> SawtoothPolicy:
         E = np.eye(len(P.S))
         policy = SawtoothPolicy(P, self.V)
@@ -196,6 +196,7 @@ class SawtoothHeuristicSearch(OfflinePlanningMethod):  # TODO - Rethink having i
 
 class TriangulatedPolicy(POMDPPolicy):
     pass  # TODO
+
 
 class TriangulatedIteration(OfflinePlanningMethod):  # TODO - Rethink inheritance
     pass
