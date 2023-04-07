@@ -71,7 +71,7 @@ class DirectSampling(DiscreteInferenceMethod):
     a list of query variables `query`, and evidence `evidence`.
 
     The method draws `m` samples from the Bayesian network and retains those samples
-    that are consistent with the evidence. A factor over the query variables is returned. 
+    that are consistent with the evidence. A factor over the query variables is returned.
     This method can fail if no samples that satisfy the evidence are found.
     """
     def __init__(self, m):
