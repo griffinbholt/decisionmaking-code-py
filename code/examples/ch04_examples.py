@@ -9,7 +9,7 @@ from ch04 import statistics, prior
 def example_4_1():
     """
     Example 4.1:
-    Using the statistics function for extracting the statistics from a data set. 
+    Using the statistics function for extracting the statistics from a data set.
     Bayesian parameter learning can be used to avoid `nan` values, but we must specify a prior.
 
     Note: `np.ravel_multi_index` indexes the parental instantiations differently than the textbook's `sub2ind`
@@ -27,7 +27,7 @@ def example_4_1():
 def example_4_2():
     """
     Example 4.2:
-    Computing the posterior parameters in a Bayesian network. 
+    Computing the posterior parameters in a Bayesian network.
     Note that unlike example 4.1, here we do not have `nan` values.
 
     Note: `np.ravel_multi_index` indexes the parental instantiations differently than the textbook's `sub2ind`

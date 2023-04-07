@@ -115,7 +115,7 @@ class LocalDirectedGraphSearch(DirectedGraphSearchMethod):
 def are_markov_equivalent(G: nx.DiGraph, H: nx.DiGraph) -> bool:
     """
     A method for determining whether the directed acyclic graphs `G` and `H` are Markov equivalent.
-    
+
     Note: The `combinations` function from `itertools` returns all subsets of a given set and a specified size.
     """
     if ((G.number_of_nodes() != H.number_of_nodes()) or

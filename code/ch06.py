@@ -9,11 +9,11 @@ class SimpleProblem():
     A simple problem as a decision network.
     A decision network is a Bayesian network with chance, decision, and utility variables.
     Utility variables are treated as deterministic.
-    
+
     Because variables in our Bayesian network take values from 1, ..., r_i, the utility variables are mapped
     to real values by the `utilities` field. For example, if we have a utility variable "u1",
     the ith utility associated with that variable is utilities["u1"][i].
-    
+
     The solve function takes as input the problem, evidence, and an inference method.
     It returns the best assignment to the decision variables and its associated expected utility.
     """
@@ -43,7 +43,7 @@ class SimpleProblem():
 
     def value_of_information(self, query: list[str], evidence: Assignment, M: DiscreteInferenceMethod) -> float:
         """
-        A method for computing the value of information for a simple problem 
+        A method for computing the value of information for a simple problem
         of a query `query` given observed chance variables and their values `evidence`.
         The method additionally takes an inference strategy `M`.
         """
