@@ -6,9 +6,14 @@ from ch02 import Variable
 from ch04 import statistics, prior
 
 
-# Example 4.1: Extracting statistics from a data set
-# Note: np.ravel_multi_index indexes the parental instantiations differently than sub2ind
 def example_4_1():
+    """
+    Example 4.1:
+    Using the statistics function for extracting the statistics from a data set. 
+    Bayesian parameter learning can be used to avoid `nan` values, but we must specify a prior.
+
+    Note: np.ravel_multi_index indexes the parental instantiations differently than `sub2ind`
+    """
     graph = nx.DiGraph()
     graph.add_nodes_from(range(3))
     graph.add_edges_from([(0, 1), (2, 1)])
@@ -19,9 +24,14 @@ def example_4_1():
     return variables, graph, M, mle
 
 
-# Example 4.2: Computing the posterior parameters in a Bayesian network
-# Note: np.ravel_multi_index indexes the parental instantiations differently than sub2ind
 def example_4_2():
+    """
+    Example 4.2:
+    Computing the posterior parameters in a Bayesian network. 
+    Note that unlike example 4.1, here we do not have `nan` values.
+
+    Note: np.ravel_multi_index indexes the parental instantiations differently than `sub2ind`
+    """
     variables, graph, M, _ = example_4_1()
     alpha = prior(variables, graph)
     posterior_params = [alpha[i] + M[i] for i in range(len(variables))]
