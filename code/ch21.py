@@ -2,6 +2,7 @@ import numpy as np
 import random
 
 from abc import abstractmethod
+from typing import Any
 
 from ch19 import POMDP
 from ch20 import POMDPPolicy, AlphaVectorPolicy, LookaheadAlphaVectorPolicy, POMDPSolutionMethod
@@ -121,10 +122,10 @@ def SawtoothPolicy(POMDPPolicy):
 
     def utility(self, b: np.ndarray) -> float:
         if b in self.V:
-            return V[b]
-        n = len(P.s)
+            return self.V[b]
+        n = len(self.P.S)
         E = np.eye(n)
-        u = np.sum([V[E[i]] * b[i] for i in range(n)])
+        u = np.sum([self.V[E[i]] * b[i] for i in range(n)])
         for (b_prime, u_prime) in self.V:
             if not np.any(np.all(b_prime == E, axis=1)):  # if b_prime not in the basis
                 i = np.argmax([np.linalg.norm(b - e, ord=1) - np.linalg.norm(b_prime - e, ord=1) for e in E])
@@ -132,7 +133,7 @@ def SawtoothPolicy(POMDPPolicy):
                 w[i] = np.linalg.norm(b - b_prime, ord=1)
                 w /= np.sum(w)
                 w = 1 - w
-                alpha = np.array([V[e] for e in E])
+                alpha = np.array([self.V[e] for e in E])
                 alpha[i] = u_prime
                 u = min(u, np.dot(w, alpha))
         return u
@@ -148,7 +149,7 @@ def SawtoothIteration(OfflinePlanningMethod): # TODO - Rethink having it inherit
         self.B = B  # beliefs to compute values including those in V map
     
     def solve(self, P: POMDP) -> SawtoothPolicy:
-        E = np.eye(n)
+        E = np.eye(len(P.S))
         policy = SawtoothPolicy(P, self.V)
         for _ in range(self.k_max):
             V = {b: (self.V[b] if np.any(np.all(b == E, axis=1)) else policy.greedy(b)[1]) for b in self.B}
@@ -180,7 +181,7 @@ def exploratory_belief_expansion(P: POMDP, B: list[np.ndarray]) -> list[np.ndarr
 
 class SawtoothHeuristicSearch(OfflinePlanningMethod): # TODO - Rethink having it inherit from Offline Planning Method
     def __init__(self, b: np.ndarray, delta: float, d: int, k_max: int, k_fib: int):
-        self.b = B          # initial belief
+        self.b = b          # initial belief
         self.delta = delta  # gap threshold
         self.d = d          # depth
         self.k_max = k_max  # maximum number of iterations

@@ -22,7 +22,7 @@ class ConditionalPlan():
     def create_for(P: POMDP, a: Any, plans: np.ndarray):
         # Note: Each row in plans is a ConditionalPlan
         subplans = {o: plan for (o, plan) in zip(P.O_space, plans)}
-        return ConditionalPLan(a, subplans)
+        return ConditionalPlan(a, subplans)
 
 
 def evaluate_plan(P: POMDP, policy: ConditionalPlan, s: Any) -> float:

@@ -38,7 +38,7 @@ class POMDP():
         r = np.sum([R(s, a) * b[i] for (i, s) in enumerate(S)])
         def P_osa(o, s, a): return np.sum([O(a, s_prime, o) * T(s, a, s_prime) for s_prime in S])
         def P_oba(o, b, a): return np.sum([b[i] * P_osa(o, s, a) for (i, s) in enumerate(S)])
-        return r + gamma * np.sum([P_oba(o, b, a) * U(dsf.update(P, a, o).b) for o in O_space])
+        return r + gamma * np.sum([P_oba(o, b, a) * U(dsf.update(self, a, o).b) for o in O_space])
 
     def greedy(self, U: Callable[[Any, Any], float], b: np.ndarray):
         expected_rewards = [self.lookahead_from_belief(U, b, a) for a in self.A]
@@ -61,7 +61,7 @@ class POMDP():
         for a in self.A:
             Vao = []
             for o in self.O_space:
-                b_prime = dsf.update(P, a, o).b
+                b_prime = dsf.update(self, a, o).b
                 idx = np.argmax([np.dot(alpha, b_prime) for alpha in V])
                 Vao.append(V[idx])
             alpha = np.array([R(s, a) + gamma * np.sum([np.sum([T(s, a, s_prime) * O(a, s_prime, o) * Vao[i][j] for (j, s_prime) in enumerate(S)]) for (i, o) in enumerate(O_space)]) for s in S])
@@ -73,7 +73,7 @@ class POMDP():
         dsf = DiscreteStateFilter(b)
         s = random.choices(self.S, weights=b)
         s_prime, r, o = self.TRO(s, a)
-        b_prime = dsf.update(P, a, o).b
+        b_prime = dsf.update(self, a, o).b
         return b_prime, r
 
 
