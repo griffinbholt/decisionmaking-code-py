@@ -1,6 +1,6 @@
 # decisionmaking-code-py
 
-[![Python package](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml/badge.svg)](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml)
+<!-- [![Python package](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml/badge.svg)](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml) -->
 
 *Original Julia Code by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
 
@@ -18,15 +18,15 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
-| 1 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 2 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 3 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 4 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 5 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌ 50% | All exact solution methods need to be tested |
-| 8 | ▌▌▌▌▌▌▌ 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
-| 9 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
+|  1 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  2 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  3 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  4 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  5 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌ 50% | All exact solution methods need to be tested |
+|  8 | ▌▌▌▌▌▌▌ 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
+|  9 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
 | 10 | ▌▌▌▌▌▌▌ 67% | 0% | `EvolutionStrategies` and `IsotropicEvolutionStrategies` need to be written |
 | 11 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
 | 12 | ▌▌▌▌▌ 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
@@ -36,9 +36,9 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 18 | ▌▌▌▌▌▌▌ 70% | 0% | `MaximumEntropyIRL` needs to be written |
-| 19 | ▌▌▌ 25% | 0% | I have only written `DiscreteStateFilter` and `KalmanFilter` |
-| 20 | 0% | 0% | Nothing written |
-| 21 | 0% | 0% | Nothing written |
+| 19 | ▌▌▌▌ 40% | 0% | `UnscentedKalmanFilter` and the particle filters need to be written |
+| 20 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 21 | ▌▌▌▌▌▌▌▌ 80% | 0% | `SawtoothHeuristicSearch`, `TriangulatedPolicy`, and `TriangulatedIteration` need to be written |
 | 22 | 0% | 0% | Nothing written |
 | 23 | 0% | 0% | Nothing written |
 | 24 | 0% | 0% | Nothing written |

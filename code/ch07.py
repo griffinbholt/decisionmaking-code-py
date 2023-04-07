@@ -79,11 +79,11 @@ class ValueFunctionPolicy():
         return self.P.greedy(self.U, s)[0]
 
 
-class SolutionMethod(ABC):
+class MDPSolutionMethod(ABC):
     pass
 
 
-class OfflinePlanningMethod(SolutionMethod):
+class OfflinePlanningMethod(MDPSolutionMethod):
     @abstractmethod
     def solve(self, P: MDP) -> Callable[[Any], Any]:
         pass
