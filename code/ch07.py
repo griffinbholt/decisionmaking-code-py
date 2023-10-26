@@ -6,6 +6,19 @@ from typing import Any, Callable
 
 
 class MDP():
+    """
+    Data structure for a Markov Decision Process. In mathematical terms,
+    MDPs are sometimes defined in terms of a tuple consisting of the various
+    components of the MDP, written (S, A, T, R, gamma):
+
+    gamma: discount factor
+    S: state space
+    A: action space
+    T: transition function
+    R: reward function
+    TR: sample transition and reward. We will us `TR` later to sample the next
+        state and reward given the current state and action: s_prime, r = TR(s, a)
+    """
     def __init__(self,
                  gamma: float,
                  S: list[Any],
