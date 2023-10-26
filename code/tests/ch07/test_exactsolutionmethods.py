@@ -1,17 +1,17 @@
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
 import numpy as np
-from typing import Any, Callable
+import problems.ThreeTileStraightLineHexworld
 
-from ch07 import MDP, ExactSolutionMethod, PolicyIteration, ValueIteration, GaussSeidelValueIteration, LinearProgramFormulation
-from ThreeTileStraightlineHexworld import gamma, S, A, T, R, TR, policy
+from typing import Any, Callable
+from ch07 import ExactSolutionMethod, PolicyIteration, ValueIteration, GaussSeidelValueIteration, LinearProgramFormulation
 
 class TestExactSolutionMethods():
-    P = MDP(gamma, S, A, T, R, TR)
+    P = problems.ThreeTileStraightLineHexworld.P
 
     def test_policy_iteration(self):
-        def initial_policy(s): return "west"
-        policy_iteration = PolicyIteration(initial_policy, k_max=10)
+        init_policy = problems.ThreeTileStraightLineHexworld.init_policy
+        policy_iteration = PolicyIteration(init_policy, k_max=10)
         policy = self.run_solve(policy_iteration)
         self.assert_all_east(policy)
 

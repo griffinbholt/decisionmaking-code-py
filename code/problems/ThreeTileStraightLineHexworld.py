@@ -1,7 +1,11 @@
+import sys; sys.path.append('./code/');
+
 import numpy as np
 import random
 
 from typing import Any
+
+from ch07 import MDP
 
 gamma = 0.9
 S = [1, 2, 3, "Terminating"]
@@ -81,8 +85,9 @@ def TR(s: Any, a: Any) -> tuple[Any, float]:
     reward = R_orig(s, a, s_prime)
     return s_prime, reward
 
+P = MDP(gamma, S, A, T, R, TR)
 
-def policy(s: Any) -> Any:
+def init_policy(s: Any) -> Any:  # See Exercise 7.5
     if s == S[0]:
         return "east"
     elif s == S[1]:

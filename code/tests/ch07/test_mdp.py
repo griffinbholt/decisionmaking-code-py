@@ -1,10 +1,11 @@
-import numpy as np
 import sys; sys.path.append('./code/'); sys.path.append('../../')
+
+import numpy as np
 
 from typing import Any
 
 from ch07 import MDP
-from ThreeTileStraightlineHexworld import gamma, S, A, T, R, TR, policy
+from problems.ThreeTileStraightLineHexworld import gamma, S, A, T, R, TR, init_policy
 
 
 class TestMDP():
@@ -36,11 +37,11 @@ class TestMDP():
         assert self.P.lookahead(TestMDP.U2_vec, s=1, a="east") == 1.23
 
     def test_policy_evaluation(self, tol=1e-3):
-        utility = self.P.policy_evaluation(policy)
+        utility = self.P.policy_evaluation(init_policy)
         assert np.all(np.abs(self.correct_policy_utility - utility) < tol)
 
     def test_iterative_policy_evaluation(self, tol=1e-3):
-        utility = self.P.iterative_policy_evaluation(policy, k_max=100)
+        utility = self.P.iterative_policy_evaluation(init_policy, k_max=100)
         assert np.all(np.abs(self.correct_policy_utility - utility) < tol)
 
     def test_greedy(self):

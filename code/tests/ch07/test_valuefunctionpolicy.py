@@ -1,12 +1,11 @@
+import numpy as np
+import problems.ThreeTileStraightLineHexworld
 import sys; sys.path.append('./code/'); sys.path.append('../../')
 
-import numpy as np
-
 from ch07 import MDP, ValueFunctionPolicy
-from ThreeTileStraightlineHexworld import gamma, S, A, T, R, TR, policy
 
 class TestValueFunctionPolicy():
-    P = MDP(gamma, S, A, T, R, TR)
+    P = problems.ThreeTileStraightLineHexworld.P
     U = np.array([1.425, 2.128, 10, 0])
 
     def test(self):  # See Exercise 7.5
