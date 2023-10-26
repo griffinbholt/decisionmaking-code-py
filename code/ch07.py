@@ -1,9 +1,11 @@
 import cvxpy as cp
 import numpy as np
+import warnings
 
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class MDP():
     """
@@ -149,7 +151,7 @@ class LinearProgramFormulation(ExactSolutionMethod):
     def solve(self, P: MDP) -> Callable[[Any], Any]:
         S, A, R, T = self.numpyform(P)
         U = cp.Variable(len(S))
-        objective = cp.Maximize(cp.sum(U))
+        objective = cp.Minimize(cp.sum(U))
         constraints = [U[s] >= R[s, a] + P.gamma * (T[s, a] @ U) for s in S for a in A]
         problem = cp.Problem(objective, constraints)
         problem.solve()

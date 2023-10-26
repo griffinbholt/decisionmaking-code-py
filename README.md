@@ -14,7 +14,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 **Note:** Rewriting all of the typeset code blocks from the book in Python has convinced me of one thing: Julia was the correct choice of programming language for code in the book. Many aspects of Julia's structure (including typing, inclusion of unicode characters, anonymous functions, mutable function declaration, etc.) make it much more ideal for communicating an algorithm than Python. If you are a student in Mykel's AA228/CS238 course or a reader that wishes to dive deep into sequential decision making, I would recommend you just learn Julia's syntax. However, if you need a quick Pythonic reference, that's what this library is for. (This has also been a great exercise for me to ensure and deepen my understanding of the material.)
 
-## Progress Update: (6 Apr 2023)
+## Progress Update: (26 Oct 2023)
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
@@ -24,7 +24,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  4 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  5 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-|  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌ 50% | All exact solution methods need to be tested |
+|  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  8 | ▌▌▌▌▌▌▌ 67% | 0% | `MultilinearValueFunction` and `SimplexValueFunction` need to be written |
 |  9 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
 | 10 | ▌▌▌▌▌▌▌ 67% | 0% | `EvolutionStrategies` and `IsotropicEvolutionStrategies` need to be written |
