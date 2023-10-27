@@ -138,7 +138,7 @@ class InverseReinforcementLearning(ImitationLearning):
             if t <= self.epsilon:
                 break
             np.copyto(self.RL.phi, phi)  # R(s, a) = phi.T @ beta(s, a)
-            theta = self.RL.optimize(self.policy, theta)
+            theta = self.RL.optimize(self.policy, theta)  # TODO - Unclear what RL is
             thetas.append(theta)
             mus = np.vstack([mus, [self.feature_expectations(lambda s: self.policy(theta, s))]])
         lam = self.calc_policy_mixture(mus)
@@ -172,4 +172,44 @@ class InverseReinforcementLearning(ImitationLearning):
 
 
 class MaximumEntropyIRL(ImitationLearning):
-    pass  # TODO
+    def __init__(self,
+                 P: MDP,
+                 b: np.ndarray,
+                 d: int,
+                 policy: Callable[[np.ndarray, int], int],
+                 p: Callable[[np.ndarray, int, int], int],
+                 grad_R: Callable[[np.ndarray, int, int]],
+                 RL,  # TODO - The RL method is unclear - What exactly is it?
+                 alpha: float,
+                 k_max: int):
+        self.P = P            # problem
+        self.b = b            # initial state distribution
+        self.d = d            # depth
+        self.policy = policy  # parametrized policy
+        self.p = p            # parametrized policy likelihood p(theta, a, s)
+        self.grad_R = grad_R  # reward function gradient
+        self.RL = RL          # reinforcement learning method
+        self.alpha = alpha    # step size
+        self.k_max = k_max    # number of iterations
+
+    def optimize(self, D: list[tuple[int, int]], phi: np.ndarray, theta: np.ndarrau) -> tuple[np.ndarray, np.ndarray]:
+        P, p, grad_R = self.P, self.p, self.grad_R
+        S, A, gamma, nD = P.S, P.A, P.gamma, len(D)
+        for _ in range(self.k_max):
+            np.copyto(self.RL.phi, phi)  # R(s, a) = phi.T @ beta(s, a)
+            theta = self.RL.optimize(self.policy, theta)  # TODO - Unclear what RL is
+            b = self.discounted_state_visitations(theta)
+            def grad_R_tau(tau): return np.sum([(gamma**i) * grad_R(phi, s, a) for (i, (s, a, r)) in enumerate(tau)])
+            grad_f = np.sum([grad_R_tau(tau) for tau in D]) - nD * np.sum([b[si] * np.sum([p(theta, a, s) * grad_R(phi, s, a) for a in A]) for (si, s) in enumerate(S)])  # TODO - Typo in textbook? What is `ai` used for?
+            phi += self.alpha * grad_f
+        return phi, theta
+
+    def discounted_state_visitations(self, theta: np.ndarray):
+        P, b, d, p = self.P, self.b, self.d, self.p
+        S, A, T, gamma = P.S, P.A, P.T, P.gamma
+        b_sk = np.zeros(len(S), d)
+        b_sk[:, 0] = [pdf(b, s) for s in S]  # TODO - What is pdf(b, s)? And what are b? (Discrete distribution? Other?)
+        for k in range(1, d):
+            for (si_prime, s_prime) in enumerate(S):
+                b_sk[si_prime, k] = gamma * np.sum([np.sum([b_sk[si, k] * p(theta, a, s) * T(s, a, s_prime) for (si, s) in enumerate(S)]) for a in A])
+        return normalize(np.mean(b_sk, axis=1), ord=1)
