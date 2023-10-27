@@ -3,7 +3,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 from scipy.stats import beta
 
-from ch07 import MDP
 from convenience import normalize
 
 
