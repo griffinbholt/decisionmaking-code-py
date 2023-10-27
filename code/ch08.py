@@ -39,7 +39,7 @@ class NearestNeighborValueFunction(ApproximateValueFunction):
         self.theta = theta  # vector of values at states in S
 
     def __call__(self, s: Any) -> float:
-        distances = np.ndarray([self.d(s, s_prime) for s_prime in self.S])
+        distances = np.array([self.d(s, s_prime) for s_prime in self.S])
         indices = np.argsort(distances)[:self.k]
         return np.mean([self.theta[i] for i in indices])
 
