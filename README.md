@@ -35,7 +35,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 18 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 18 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Need to ask Mykel some questions |
 | 19 | ▌▌▌▌ 40% | 0% | `UnscentedKalmanFilter` and the particle filters need to be written |
 | 20 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 21 | ▌▌▌▌▌▌▌▌ 80% | 0% | `SawtoothHeuristicSearch`, `TriangulatedPolicy`, and `TriangulatedIteration` need to be written |

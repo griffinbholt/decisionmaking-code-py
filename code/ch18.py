@@ -208,7 +208,7 @@ class MaximumEntropyIRL(ImitationLearning):
         P, b, d, p = self.P, self.b, self.d, self.p
         S, A, T, gamma = P.S, P.A, P.T, P.gamma
         b_sk = np.zeros(len(S), d)
-        b_sk[:, 0] = [pdf(b, s) for s in S]  # TODO - What is pdf(b, s)? And what are b? (Discrete distribution? Other?)
+        # b_sk[:, 0] = [pdf(b, s) for s in S]  # TODO - What is pdf(b, s)? And what are b? (Discrete distribution? Other?)
         for k in range(1, d):
             for (si_prime, s_prime) in enumerate(S):
                 b_sk[si_prime, k] = gamma * np.sum([np.sum([b_sk[si, k] * p(theta, a, s) * T(s, a, s_prime) for (si, s) in enumerate(S)]) for a in A])
