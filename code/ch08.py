@@ -61,30 +61,68 @@ class LocallyWeightedValueFunction(ApproximateValueFunction):
         self.theta = U
 
 
-class MultilinearValueFunction(ApproximateValueFunction):
-    def __init__(self, o, delta: np.ndarray, theta: np.ndarray):  # TODO - typing
-        self.o = o
-        self.delta = delta
-        self.theta = theta
+class InterpolationValueFunction(ApproximateValueFunction):
+    """
+    A parent class for interpolation methods, used to estimate the value
+    of state vector `s` for known state values `theta` over a grid defined by
+    lower-left vertex `o` and vector of widths `delta`.
 
-    def __call__(self, s: Any) -> float:
-        pass  # TODO - Implement
+    Vertices of the grid can all be written `o + delta * i` for some nonnegative
+    integral vector `i`.
+    """
+    def __init__(self, o: np.ndarray, delta: np.ndarray, theta: np.ndarray):
+        self.o = o          # position of lower-left corner
+        self.delta = delta  # vector of widths
+        self.theta = theta  # vector of values at states in S
 
-    def fit(self, S: list[Any], U: np.ndarray):
-        self.theta = U
-
-
-class SimplexValueFunction(ApproximateValueFunction):
-    def __init__(self, o, delta: np.ndarray, theta: np.ndarray):  # TODO - typing
-        self.o = o
-        self.delta = delta
-        self.theta = theta
-
-    def __call__(self, s: Any) -> float:
-        pass  # TODO - Implement
+    @abstractmethod
+    def __call__(self, s: np.ndarray) -> float:
+        pass
 
     def fit(self, S: list[Any], U: np.ndarray):
         self.theta = U
+
+
+class MultilinearValueFunction(InterpolationValueFunction):
+    """Multilinear Interpolation"""
+    def __call__(self, s: np.ndarray) -> float:
+        Delta = (s - self.o) / self.delta
+        # Multidimensional index of lower-left cell
+        i = np.minimum(np.floor(Delta).astype(int) + 1, np.array(self.theta.shape) - 1)
+        vertex_index = np.empty_like(i)
+        d = len(s)
+        u = 0.0
+        for vertex in range(2**d):
+            weight = 1.0
+            for j in range(d):
+                # Check whether jth bit is set
+                if vertex & (1 << j) > 0:
+                    vertex_index[j] = i[j] + 1
+                    weight *= Delta[j] - i[j] + 1
+                else:
+                    vertex_index[j] = i[j]
+                    weight *= i[j] - Delta[j]
+            u += self.theta[tuple(vertex_index)] * weight
+        return u
+
+
+class SimplexValueFunction(InterpolationValueFunction):
+    """Simplex Interpolation"""
+    def __call__(self, s: np.ndarray) -> float:
+        Delta = (s - self.o) / self.delta
+        # Multidimensional index of upper-right cell
+        i = np.minimum(np.floor(Delta).astype(int) + 1, np.array(self.theta.shape) - 1) + 1
+        u = 0.0
+        s_prime = (s - (self.o + (self.delta * (i - 2)))) / self.delta
+        p = np.argsort(s_prime)  # increasing order
+        w_tot = 0.0
+        for j in p:
+            w = s_prime[j] - w_tot
+            u += w * self.theta[tuple(i)]
+            i[j] -= 1
+            w_tot += w
+        u += (1 - w_tot) * self.theta[tuple(i)]
+        return u
 
 
 class LinearRegressionValueFunction(ApproximateValueFunction):
