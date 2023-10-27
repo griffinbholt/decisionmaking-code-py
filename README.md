@@ -2,7 +2,7 @@
 
 [![Python package](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml/badge.svg)](https://github.com/griffinbholt/decisionmaking-code-py/actions/workflows/python-package.yml)
 
-*Original Julia Code by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
+*[Original Julia Code](https://github.com/algorithmsbooks/decisionmaking-code) by: Mykel Kochenderfer, Tim Wheeler, and Kyle Wray*
 
 *Python Versions by: Griffin Holt*
 
