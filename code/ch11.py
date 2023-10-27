@@ -26,7 +26,7 @@ class FiniteDifferenceGradient(PolicyGradientEstimationMethod):
         n = len(theta)
         def delta_theta(i): np.array([self.delta if i == k else 0.0 for k in range(n)])
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
-        def U(theta_prime):  # TODO - Rethink naming conventions
+        def U(theta_prime):
             def pi(s): return policy(theta_prime, s)
             def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
             return np.mean([R(tau()) for i in range(self.m)])
@@ -45,7 +45,7 @@ class RegressionGradient(PolicyGradientEstimationMethod):
     def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray) -> np.ndarray:
         delta_theta = self.delta * normalize(np.randn(self.m, len(theta)), ord=2, axis=1, keepdims=True)
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
-        def U(theta_prime):  # TODO - Rethink naming conventions
+        def U(theta_prime):
             def pi(s): return policy(theta_prime, s)
             def tau(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], pi, self.d)
             return R(tau())
@@ -61,11 +61,11 @@ class LikelihoodRatioGradient(PolicyGradientEstimationMethod):
         self.m = m              # number of samples
         self.grad_ll = grad_ll  # gradient of log likelihood
 
-    def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray, return_FIM=False) -> np.ndarray:  # TODO - Check inheritance for Python and adding parameter
+    def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray, return_FIM=False) -> np.ndarray:
         def policy_theta(s): return policy(theta, s)
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
         def grad_log(tau): return np.sum([self.grad_ll(theta, a, s) for (s, a, r) in tau])
-        def grad_U(tau): return grad_log(tau) * R(tau)  # TODO - Maybe there is a bug in the textbook (I found two others - need to go back and find them)
+        def grad_U(tau): return grad_log(tau) * R(tau)  # TODO - There is a bug in the textbook code (I found two others - need to go back and find them)
         def traj(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)
         trajs = [traj() for _ in range(self.m)]
         avg_grad = np.mean([grad_U(tau) for tau in trajs])  # TODO - Check the dimension of this answer

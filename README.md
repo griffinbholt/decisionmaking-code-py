@@ -28,7 +28,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  8 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 |  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 11 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
+| 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 12 | ▌▌▌▌▌ 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
 | 13 | 0% | 0% | Skipped for now; coming back to it later |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
