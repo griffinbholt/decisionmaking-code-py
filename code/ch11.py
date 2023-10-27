@@ -61,7 +61,7 @@ class LikelihoodRatioGradient(PolicyGradientEstimationMethod):
         self.m = m              # number of samples
         self.grad_ll = grad_ll  # gradient of log likelihood
 
-    def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray, return_FIM=False) -> np.ndarray:
+    def gradient(self, policy: Callable[[np.ndarray, Any], Any], theta: np.ndarray, return_FIM=False, return_trajs=False) -> np.ndarray:
         def policy_theta(s): return policy(theta, s)
         def R(tau): return np.sum([r*(self.P.gamma**k) for (k, (s, a, r)) in enumerate(tau)])
         def grad_log(tau): return np.sum([self.grad_ll(theta, a, s) for (s, a, r) in tau])
@@ -69,10 +69,13 @@ class LikelihoodRatioGradient(PolicyGradientEstimationMethod):
         def traj(): return self.P.simulate(random.choices(self.P.S, weights=self.b)[0], policy_theta, self.d)
         trajs = [traj() for _ in range(self.m)]
         avg_grad = np.mean([grad_U(tau) for tau in trajs])  # TODO - Check the dimension of this answer
+        
+        result = (avg_grad,)
         if return_FIM:
             def F(tau): return np.outer(grad_log(tau), grad_log(tau))
-            return avg_grad, np.mean([F(tau) for tau in trajs])
-        return avg_grad
+            FIM = np.mean([F(tau) for tau in trajs])
+            result = result + (FIM, trajs) if return_trajs else result + (FIM, None)
+        return result
 
 
 def RewardToGoGradient(PolicyGradientEstimationMethod):

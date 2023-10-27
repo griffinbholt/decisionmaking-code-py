@@ -29,8 +29,8 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 12 | ▌▌▌▌▌ 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
-| 13 | 0% | 0% | Skipped for now; coming back to it later |
+| 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 13 | 0% | 0% | Skipped for now since not it's covered in CS 238; coming back to it later |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 15 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Just need to write the `simulate` method from the end of the chapter |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
