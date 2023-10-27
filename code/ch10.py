@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 from abc import abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Type
 from scipy.stats import rv_continuous, multivariate_normal
 
 from ch07 import MDP, SolutionMethod
@@ -111,10 +111,87 @@ class CrossEntropyPolicySearch(SearchDistributionMethod, PolicySearchMethod):
         return self.optimize_dist(policy, U).mean
 
 
+def evolution_strategy_weights(m: int) -> np.ndarray:
+    ws = np.array([max(0, np.log((m/2) + 1) - np.log(i + 1)) for i in range(m)])
+    ws /= np.sum(ws)
+    ws -= (1/m)
+    return ws
+
+
 class EvolutionStrategies(SearchDistributionMethod):
-    pass
-    # def __init__(self, D: Type[rv_continuous], psi: )
+    """
+    Due to the limitations of the scipy.stats library (distributions aren't easily generalized as in Julia),
+    we implement this for the Multivariate Gaussian distribution specifically
+    (instead of generically, for any multivariable distribution).
+
+    However, this class can easily be changed to work for any distribution you wish.
+    """
+    def __init__(self, mu: np.ndarray, Sigma: np.ndarray, m: int, alpha: float, k_max: int):
+        self.mu = mu                     # initial mean 
+        self.A = self._decompose(Sigma)  # initial A, where A.T @ A = Sigma (the covariance matrix)
+        self.m = m                       # number of samples
+        self.alpha = alpha               # step factor
+        self.k_max = k_max               # number of iterations
+    
+    def _decompose(self, Sigma: np.ndarray) -> np.ndarray:
+        eigvals, eigvecs = np.linalg.eig(Sigma)
+        return np.diag(np.sqrt(eigvals)) @ eigvecs.T
+    
+    def _grad_ll(self, mu: np.ndarray, A: np.ndarray, x: np.ndarray) -> [np.ndarray, np.ndarray]:
+        """log search likelihood gradient for the Multivariable Normal distribution"""
+        Sigma = A.T @ A
+        diff = x - mu
+        inv_Sigma = np.linalg.inv(Sigma)
+        grad_ll_mu = inv_Sigma @ diff
+        grad_ll_Sigma = 0.5 * (np.outer(inv_Sigma @ diff, inv_Sigma.T @ diff) - inv_Sigma)
+        grad_ll_A = A @ (grad_ll_Sigma + grad_ll_Sigma.T)
+        return grad_ll_mu, grad_ll_A
+
+    def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> multivariate_normal:
+        mu, A = self.mu, self.A
+        ws = evolution_strategy_weights(self.m)
+        for _ in range(self.k_max):
+            thetas = multivariate_normal.rvs(mean=mu, cov=(A.T @ A), size=self.m)
+            us = np.array([U(policy, thetas[:, i]) for i in range(self.m)])
+            sp = np.flip(np.argsort(us))
+            update_mu, update_A = np.zeros_like(mu), np.zeros_like(A)
+            for (w, i) in zip(ws, sp):  # Note: Accomplished in Julia in one line
+                grad_ll_mu, grad_ll_A = self._grad_ll(mu, A, thetas[:, i])
+                update_mu += w * grad_ll_mu
+                update_A += w * grad_ll_A
+            mu += self.alpha * update_mu
+            A += self.alpha * update_A
+        return multivariate_normal(mean=mu, cov=(A.T @ A))
 
 
-class IsotropicEvolutionStrategies(EvolutionStrategies):
-    pass
+class IsotropicEvolutionStrategies(SearchDistributionMethod):
+    """
+    An evolution strategies method for updating an isotropic multivariate
+    Gaussian search distribution with mean `mu` and covariance (sigma^2) * I
+    over policy parameterizations for a policy `policy(theta, s)`.
+
+    This implementation also takes a policy evaluation function `U`, a step
+    factor `alpha`, and an iteration count `k_max`.
+
+    In each iteration, m/2 parametrization samples are drawn and mirrored and
+    are then used to estimate the search gradient.
+    """
+    def __init__(self, mu: np.ndarray, sigma: float, m: int, alpha: float, k_max: int):
+        self.mu = mu                     # initial mean
+        self.sigma = sigma               # initial standard deviation
+        self.m = m                       # number of samples
+        self.alpha = alpha               # step factor
+        self.k_max = k_max               # number of iterations
+    
+    def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> multivariate_normal:
+        mu, sigma = self.mu, self.sigma
+        n = len(self.p)
+        ws = evolution_strategy_weights(2 * (self.m // 2))
+        for _ in range(self.k_max):
+            epsilons = np.random.randn(self.m // 2, n)
+            epsilons = np.append(epsilons, -epsilons)
+            us = np.array([U(policy, mu + sigma * eps) for eps in epsilons])
+            sp = np.flip(np.argsort(us))
+            update = np.sum([w * epsilons[i] for (w, i) in zip(ws, sp)]) / sigma
+            mu += self.alpha * update
+        return multivariate_normal(mean=mu, cov=sigma)

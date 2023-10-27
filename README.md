@@ -26,8 +26,8 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  8 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-|  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested  |
-| 10 | ▌▌▌▌▌▌▌ 67% | 0% | `EvolutionStrategies` and `IsotropicEvolutionStrategies` need to be written |
+|  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Just need to make a few syntactic decisions |
 | 12 | ▌▌▌▌▌ 50% | 0% | `TrustRegionUpdate` and `ClampedSurrogateUpdate` need to be written |
 | 13 | 0% | 0% | Skipped for now; coming back to it later |
