@@ -30,7 +30,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 13 | 0% | 0% | Nothing written |
+| 13 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Need to ask Mykel some questions |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
