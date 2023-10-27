@@ -16,6 +16,7 @@ class BanditProblem():
     def simulate(self, model: 'BanditModel', policy: 'BanditPolicy', h: int):
         for _ in range(h):
             a = policy(model)
+            print(a)
             r = self.R(a)
             model.update(a, r)
 
