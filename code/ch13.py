@@ -6,8 +6,10 @@ from typing import Any, Callable
 
 class ActorCriticMethod(ABC):
     @abstractmethod
-    def gradient(self, policy: Callable[[np.ndarray, Any], Any],
-                 theta: np.ndarray, phi: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def gradient(self,
+                 policy: Callable[[np.ndarray, Any], Any],
+                 theta: np.ndarray, 
+                 phi: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         pass
 
 

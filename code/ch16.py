@@ -28,6 +28,22 @@ class ModelBasedMDP(RLMDP):
         self.S = S  # state space (assumes 1:nstates)
         self.U = U  # value function
         self.planner = planner
+    
+    @abstractmethod
+    def update(self, s: int, a: int, r: float, s_prime: int):
+        pass
+
+    @abstractmethod
+    def to_MDP(self) -> MDP:
+        pass
+
+    def simulate(self, policy: 'RLPolicy', h: int, s: int):
+        for _ in range(h):
+            P = self.to_MDP()
+            a = policy(self, s)
+            s_prime, r = P.TR(s, a)
+            self.update(s, a, r, s_prime)
+            s = s_prime
 
 
 class MaximumLikelihoodMDP(ModelBasedMDP):
@@ -66,11 +82,21 @@ class MaximumLikelihoodMDP(ModelBasedMDP):
         R = np.divide(self.rho, N_sa, out=np.zeros_like(self.rho), where=(N_sa != 0))
         return MDP(self.gamma, self.S, self.A, T, R)
 
-    def epsilon_greedy_exploration(self, s: int, epsilon: float) -> int:
-        if np.random.rand() < epsilon:
-            return np.random.choice(self.A)
-        def Q(s, a): return self.lookahead(s, a)
-        return np.argmax([Q(s, a) for a in self.A])
+
+class RLPolicy(ABC):
+    @abstractmethod
+    def __call__(self, model: ModelBasedMDP, s: int) -> int:
+        pass
+
+class EpsilonGreedyExploration(RLPolicy):
+    def __init__(self, epsilon: float):
+        self.epsilon = epsilon  # probability of random arm
+
+    def __call__(self, model: ModelBasedMDP, s: int) -> int:
+        if np.random.rand() < self.epsilon:
+            return np.random.choice(model.A)
+        def Q(s, a): return model.lookahead(s, a)
+        return np.argmax([Q(s, a) for a in model.A])  
 
 
 class ModelUpdateScheme(ABC):
@@ -204,7 +230,7 @@ class BayesianMDP(ModelBasedMDP):
         self.D[s, a] = dirichlet(alpha)
         self.planner.update(self, s, a, r, s_prime)
 
-    def sample(self) -> MDP:
+    def to_MDP(self) -> MDP:  # Accomplished via sampling
         T = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
         return MDP(self.gamma, self.S, self.A, T, self.R)
 

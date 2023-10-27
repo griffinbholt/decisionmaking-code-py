@@ -30,9 +30,9 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 13 | 0% | 0% | Skipped for now since not it's covered in CS 238; coming back to it later |
+| 13 | 0% | 0% | Nothing written |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 15 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Just need to write the `simulate` method from the end of the chapter |
+| 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 18 | ▌▌▌▌▌▌▌ 70% | 0% | `MaximumEntropyIRL` needs to be written |
@@ -47,3 +47,6 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 27 | 0% | 0% | Nothing written |
 
 I have also written code for pertinent examples and exercises through Chapter 7.
+
+<!-- TODO - I need to go through and check that all functions have proper parameter
+and return signatures. -->

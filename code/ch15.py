@@ -3,6 +3,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 from scipy.stats import beta
 
+from ch07 import MDP
 from convenience import normalize
 
 
@@ -94,5 +95,3 @@ class UCB1Exploration(BanditPolicy):
 class PosteriorSamplingExploration(BanditPolicy):
     def __call__(self, model: BanditModel) -> int:
         return np.argmax([distrib.rvs() for distrib in model.B])
-
-# TODO - Decide how to incorporate the simulate function
