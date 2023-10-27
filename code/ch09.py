@@ -35,13 +35,13 @@ class RolloutLookahead(OnlinePlanningMethod):
 def forward_search(P: MDP, s: Any, d: int, U: Callable[[Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U(s))
-    best = (None, -np.inf)  # TODO - Decide if split up or not
+    best_a, best_u = (None, -np.inf)
     def U_prime(s): return (forward_search(P, s, d - 1, U))[1]
     for a in P.A:
         u = P.lookahead(U_prime, s, a)
-        if u > best[1]:
-            best = (a, u)
-    return best
+        if u > best_u:
+            best_a, best_u = (a, u)
+    return best_a, best_u
 
 
 class ForwardSearch(OnlinePlanningMethod):
@@ -60,14 +60,14 @@ def branch_and_bound(P: MDP, s: Any, d: int,
     if d <= 0:
         return (None, U_lo(s))
     def U_prime(s): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
-    best = (None, -np.inf)  # TODO - Decide if split up or not
+    best_a, best_u = (None, -np.inf)
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
-        if Q_hi(s, a) < best[1]:
-            return best  # safe to prune
+        if Q_hi(s, a) < best_u:
+            return best_a, best_u # safe to prune
         u = P.lookahead(U_prime, s, a)
-        if u > best[1]:
-            best = (a, u)
-    return best
+        if u > best_u:
+            best_a, best_u = (a, u)
+    return best_a, best_u
 
 
 class BranchAndBound(OnlinePlanningMethod):
@@ -84,16 +84,16 @@ class BranchAndBound(OnlinePlanningMethod):
 def sparse_sampling(P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
     if d <= 0:
         return (None, U(s))
-    best = (None, -np.inf)
+    best_a, best_u = (None, -np.inf)
     for a in P.A:
         u = 0.0
         for _ in range(m):
             s_prime, r = P.randstep(s, a)
             a_prime, u_prime = sparse_sampling(P, s_prime, d - 1, m, U)
             u += (r + P.gamma * u_prime) / m
-        if u > best[1]:
-            best = (a, u)
-    return best
+        if u > best_u:
+            best_a, best_u = (a, u)
+    return best_a, best_u
 
 
 class SparseSampling(OnlinePlanningMethod):
@@ -215,7 +215,7 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
                s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
         found, to_expand, envelope = False, {s}, []
         while len(to_expand) != 0:
-            s = to_expand.pop()  # TODO - set.pop() removes a random element, whereas it is unknown what Julia's pop!(set) removes
+            s = to_expand.pop()
             envelope.append(s)
             a, u = self.P.greedy(U, s)
             if np.abs(U[s] - u) > self.delta:
