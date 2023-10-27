@@ -32,7 +32,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 13 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Need to ask Mykel some questions |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
-| 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌ 10% | Testing in progress |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 18 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Need to ask Mykel some questions |

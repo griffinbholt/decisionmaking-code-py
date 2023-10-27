@@ -22,7 +22,7 @@ class BanditProblem():
 
 class BanditModel():
     def __init__(self, B: list[beta]):
-        self.B = B
+        self.B = B  # priors
 
     def update(self, a: int, r: int) -> beta:
         alpha, b = self.B[a].args
