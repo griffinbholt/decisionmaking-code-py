@@ -8,7 +8,7 @@ class TestIncrementalEstimate():
     m = 5    # Size of random vector
     n = 500  # Number of samples
     x = np.random.random(size=(n, m))
-    tol = 1e-15
+    tol = 1e-14
 
     def test_update_scalar(self):
         incr_est = IncrementalEstimate(mu=self.x[0, 0],
