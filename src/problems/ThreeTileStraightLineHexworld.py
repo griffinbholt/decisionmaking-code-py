@@ -1,4 +1,4 @@
-import sys; sys.path.append('./code/');
+import sys; sys.path.append('./src/');
 
 import numpy as np
 import random

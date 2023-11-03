@@ -1,6 +1,6 @@
 import numpy as np
 import problems.ThreeTileStraightLineHexworld
-import sys; sys.path.append('./code/'); sys.path.append('../../')
+import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 from ch07 import MDP, ValueFunctionPolicy
 

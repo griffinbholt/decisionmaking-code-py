@@ -1,5 +1,5 @@
 import numpy as np
-import sys; sys.path.append('./code/'); sys.path.append('../../')
+import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 from ch04 import gaussian_kernel, kernel_density_estimate
 

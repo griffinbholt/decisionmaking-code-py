@@ -1,4 +1,4 @@
-import sys; sys.path.append('./code/'); sys.path.append('../../')
+import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 import numpy as np
 

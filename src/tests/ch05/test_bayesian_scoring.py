@@ -1,14 +1,14 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
-import sys; sys.path.append('./code/')
+import sys; sys.path.append('./src/')
 
 from ch02 import Variable
 from ch05 import bayesian_score
 
 
 def test_bayesian_scoring(tol=1e-15):
-    data = pd.read_csv("./code/tests/ch05/example/example.csv").to_numpy().T - 1
+    data = pd.read_csv("./src/tests/ch05/example/example.csv").to_numpy().T - 1
     graph = nx.DiGraph()
     graph.add_nodes_from(range(6))
     graph.add_edges_from([(0, 1), (2, 3), (4, 5)])

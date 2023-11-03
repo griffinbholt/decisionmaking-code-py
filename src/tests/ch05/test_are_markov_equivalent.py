@@ -1,5 +1,5 @@
 import networkx as nx
-import sys; sys.path.append('./code/'); sys.path.append('../../')
+import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 from ch05 import are_markov_equivalent
 

@@ -1,6 +1,6 @@
 import numpy as np
 import networkx as nx
-import sys; sys.path.append('./code/'); sys.path.append('../../')
+import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 from ch02 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
 
