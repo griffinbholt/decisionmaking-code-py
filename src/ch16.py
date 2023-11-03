@@ -239,7 +239,7 @@ class PosteriorSamplingUpdate(ModelUpdateScheme):
     def __init__(self):
         self.solver = LinearProgramFormulation()
 
-    def update(self, model: ModelBasedMDP, s: int, a: int, r: float, s_prime: int):
-        P = model.sample()
+    def update(self, model: BayesianMDP, s: int, a: int, r: float, s_prime: int):
+        P = model.to_MDP()  # Sample the Bayesian MDP
         U = self.solver.solve(P)
         np.copyto(model.U, U)
