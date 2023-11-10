@@ -6,6 +6,9 @@ from ch07 import MDP
 
 
 def adversarial(P: MDP, policy: Callable[[Any], Any], lam: float) -> MDP:
+    """
+    P must have an enumerated action space A and an enumerated state space S.
+    """
     S, T, R, gamma = P.S, P.T, P.R, P.gamma
     S_prime = A_prime = S
     R_prime = np.zeros((len(S_prime), len(A_prime)))
