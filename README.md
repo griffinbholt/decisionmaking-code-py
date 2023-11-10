@@ -25,7 +25,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  5 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-|  8 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌ 16.7% | Testing in progress; need data |
+|  8 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |

@@ -18,13 +18,13 @@ class ApproximateValueFunction(ABC):
 
 
 class ApproximateValueIteration(OfflinePlanningMethod):
-    def __init__(self, init_U_theta: ApproximateValueFunction, S: list[Any], k_max: int):
-        self.init_U_theta = init_U_theta  # initial parameterized value function that supports fit
-        self.S = S                        # set of discrete states for performing backups
-        self.k_max = k_max                # maximum number of iterations
+    def __init__(self, U_theta: ApproximateValueFunction, S: list[Any], k_max: int):
+        self.U_theta = U_theta  # initial parameterized value function that supports fit
+        self.S = S              # set of discrete states for performing backups
+        self.k_max = k_max      # maximum number of iterations
 
     def solve(self, P: MDP) -> Callable[[Any], Any]:
-        U_theta = self.init_U_theta.copy()  # TODO - Test depth of this copy
+        U_theta = self.U_theta
         for _ in range(self.k_max):
             U = np.array([P.backup(U_theta, s) for s in self.S])
             U_theta.fit(self.S, U)
@@ -88,7 +88,7 @@ class MultilinearValueFunction(InterpolationValueFunction):
     def __call__(self, s: np.ndarray) -> float:
         Delta = (s - self.o) / self.delta
         # Multidimensional index of lower-left cell
-        i = np.minimum(np.floor(Delta).astype(int) + 1, np.array(self.theta.shape) - 1)
+        i = np.minimum(np.floor(Delta).astype(int), np.array(self.theta.shape) - 2)
         vertex_index = np.empty_like(i)
         d = len(s)
         u = 0.0
@@ -98,10 +98,10 @@ class MultilinearValueFunction(InterpolationValueFunction):
                 # Check whether jth bit is set
                 if vertex & (1 << j) > 0:
                     vertex_index[j] = i[j] + 1
-                    weight *= Delta[j] - i[j] + 1
+                    weight *= Delta[j] - i[j]
                 else:
                     vertex_index[j] = i[j]
-                    weight *= i[j] - Delta[j]
+                    weight *= i[j] - Delta[j] + 1
             u += self.theta[tuple(vertex_index)] * weight
         return u
 
@@ -111,9 +111,9 @@ class SimplexValueFunction(InterpolationValueFunction):
     def __call__(self, s: np.ndarray) -> float:
         Delta = (s - self.o) / self.delta
         # Multidimensional index of upper-right cell
-        i = np.minimum(np.floor(Delta).astype(int) + 1, np.array(self.theta.shape) - 1) + 1
+        i = np.minimum(np.floor(Delta).astype(int) + 1, np.array(self.theta.shape) - 1)
         u = 0.0
-        s_prime = (s - (self.o + (self.delta * (i - 2)))) / self.delta
+        s_prime = (s - (self.o + (self.delta * (i - 1)))) / self.delta
         p = np.argsort(s_prime)  # increasing order
         w_tot = 0.0
         for j in p:
@@ -135,4 +135,4 @@ class LinearRegressionValueFunction(ApproximateValueFunction):
 
     def fit(self, S: list[Any], U: np.ndarray):
         X = np.array([self.beta(s) for s in S])
-        self.theta = np.linalg.solve(X.T @ X, X.T @ U)
+        self.theta = np.linalg.pinv(X) @ U
