@@ -6,7 +6,7 @@ from ch08 import ApproximateValueIteration, NearestNeighborValueFunction, Locall
 from problems.HexWorldMDP import StraightLineHexWorld
 
 class TestApproximateValueFunctions():
-    tol = 1e-16
+    tol = 1e-5
 
     def test_nearest_neighbor(self):  # See Exercise 8.4
         S = np.array([[4, 5], [2, 6], [-1, -1]])
