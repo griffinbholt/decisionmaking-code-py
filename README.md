@@ -14,7 +14,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 **Note:** Rewriting all of the typeset code blocks from the book in Python has convinced me of one thing: Julia was the correct choice of programming language for code in the book. Many aspects of Julia's structure (including typing, inclusion of unicode characters, anonymous functions, mutable function declaration, etc.) make it much more ideal for communicating an algorithm than Python. If you are a student in Mykel's AA228/CS238 course or a reader that wishes to dive deep into sequential decision making, I would recommend you just learn Julia's syntax. However, if you need a quick Pythonic reference, that's what this library is for. (This has also been a great exercise for me to ensure and deepen my understanding of the material.)
 
-## Progress Update: (2 Nov 2023)
+## Progress Update: (10 Nov 2023)
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
@@ -31,7 +31,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 13 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Need to ask Mykel some questions |
-| 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌ 10% | `IncrementalEstimate` tested; the rest needs to be tested |

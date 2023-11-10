@@ -15,6 +15,6 @@ def adversarial(P: MDP, policy: Callable[[Any], Any], lam: float) -> MDP:
     T_prime = np.zeros((len(S_prime), len(A_prime), len(S_prime)))
     for s in S_prime:
         for a in A_prime:
-            R_prime[s, a] = -R(s, policy(s)) + (lam * np.log(T(s, policy(s), a)))
+            R_prime[s, a] = -R(s, policy(s)) + (lam * np.log(T(s, policy(s), a) + 1e-16))
             T_prime[s, a, a] = 1.0
     return MDP(gamma, S_prime, A_prime, T_prime, R_prime)
