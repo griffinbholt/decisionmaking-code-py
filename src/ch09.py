@@ -3,10 +3,10 @@ import numpy as np
 from abc import abstractmethod
 from typing import Any, Callable
 
-from ch07 import MDP, SolutionMethod
+from ch07 import MDP, MDPSolutionMethod
 
 
-class OnlinePlanningMethod(SolutionMethod):
+class OnlinePlanningMethod(MDPSolutionMethod):
     @abstractmethod
     def __call__(self, s: Any) -> Any:
         pass
@@ -17,7 +17,7 @@ def rollout(P: MDP, s: Any, policy: Callable[[Any], Any], d: int) -> float:
     for t in range(d):
         a = policy(s)
         s, r = P.randstep(s, a)
-        ret += P.gamma**(t - 1) * r
+        ret += (P.gamma**t) * r
     return ret
 
 
@@ -59,7 +59,7 @@ def branch_and_bound(P: MDP, s: Any, d: int,
                      Q_hi: Callable[[Any, Any], float]) -> tuple[Any, float]:
     if d <= 0:
         return (None, U_lo(s))
-    def U_prime(s): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)
+    def U_prime(s): return branch_and_bound(P, s, d - 1, U_lo, Q_hi)[1]
     best_a, best_u = (None, -np.inf)
     for a in sorted(P.A, key=(lambda a: Q_hi(s, a)), reverse=True):
         if Q_hi(s, a) < best_u:
@@ -97,7 +97,7 @@ def sparse_sampling(P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
 
 
 class SparseSampling(OnlinePlanningMethod):
-    def __init__(self, P: MDP, s: Any, d: int, m: int, U: Callable[[Any], float]):
+    def __init__(self, P: MDP, d: int, m: int, U: Callable[[Any], float]):
         self.P = P  # problem
         self.d = d  # depth
         self.m = m  # number of samples
