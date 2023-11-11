@@ -1,5 +1,6 @@
 import cvxpy as cp
 import numpy as np
+import random
 import warnings
 
 from abc import ABC, abstractmethod
@@ -83,6 +84,9 @@ class MDP():
             trajectory.append((s, a, r))
             s = s_prime
         return trajectory
+    
+    def random_policy(self):
+        return lambda s, A=self.A: random.choices(A)[0]
 
 
 class ValueFunctionPolicy():

@@ -3,7 +3,7 @@ import sys; sys.path.append('./src/'); sys.path.append('../'); sys.path.append('
 import numpy as np
 import random
 
-from ch09 import *
+from ch09 import rollout, RolloutLookahead, forward_search, ForwardSearch, branch_and_bound, BranchAndBound, sparse_sampling, SparseSampling
 from problems.HexWorldMDP import HexWorld, StraightLineHexWorld
 
 class TestOnlinePlanningMethods():
@@ -118,9 +118,3 @@ class TestOnlinePlanningMethods():
         # Search from state 3 to depth 2 should yield reward, with action 1
         policy = SparseSampling(P, 2, 50, lambda s: 5.0 if s == 1 else 0.0)
         assert(policy(2) == 3)
-          
-
-
-
-test = TestOnlinePlanningMethods()
-test.test_sparse_sampling()
