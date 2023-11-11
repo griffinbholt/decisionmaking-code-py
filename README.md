@@ -26,7 +26,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 |  6 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  7 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  8 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-|  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌ 70% | `HeuristicSearch`, and `LabeledHeuristicSearch` need to be tested |
+|  9 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 10 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 11 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 12 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |

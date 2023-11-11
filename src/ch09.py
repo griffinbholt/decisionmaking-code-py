@@ -3,7 +3,7 @@ import numpy as np
 from abc import abstractmethod
 from typing import Any, Callable
 
-from ch07 import MDP, MDPSolutionMethod
+from ch07 import MDP, MDPSolutionMethod, ValueFunctionPolicy
 
 
 class OnlinePlanningMethod(MDPSolutionMethod):
@@ -173,6 +173,12 @@ class HeuristicSearch(OnlinePlanningMethod):
             U[s] = u
             s = np.random.choice(self.P.S, p=[self.P.T(s, a, s_prime) for s_prime in self.P.S])
 
+    def extract_policy(self, s: int | np.ndarray) -> ValueFunctionPolicy:
+        U = np.array([self.U_hi(s) for s in self.P.S])
+        for _ in range(self.m):
+            self.simulate(U, s)
+        return ValueFunctionPolicy(self.P, U)
+
 
 class LabeledHeuristicSearch(OnlinePlanningMethod):
     def __init__(self, P: MDP, U_hi: Callable[[Any], float], d: int, delta: float):
@@ -208,10 +214,11 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
             for s in reversed(envelope):
                 U[s] = self.P.greedy(U, s)[1]
         else:
-            solved = solved.union(envelope)
+            solved.update(envelope)
         return found
 
-    def expand(self, U: np.ndarray, solved: set[int] | set[np.ndarray],
+    def expand(self, U: np.ndarray, 
+               solved: set[int] | set[np.ndarray],
                s: int | np.ndarray) -> tuple[bool, list[int] | list[np.ndarray]]:
         found, to_expand, envelope = False, {s}, []
         while len(to_expand) != 0:
@@ -225,3 +232,9 @@ class LabeledHeuristicSearch(OnlinePlanningMethod):
                     if (self.P.T(s, a, s_prime) > 0) and (s_prime not in solved.union(envelope)):
                         to_expand.add(s_prime)
         return found, envelope
+
+    def extract_policy(self, s: int | np.ndarray) -> ValueFunctionPolicy:
+        U, solved = np.array([self.U_hi(s) for s in self.P.S]), set()
+        while s not in solved:
+            self.simulate(U, solved, s)
+        return ValueFunctionPolicy(self.P, U)
