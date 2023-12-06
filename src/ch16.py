@@ -54,7 +54,7 @@ class MaximumLikelihoodMDP(ModelBasedMDP):
                  rho: np.ndarray,
                  gamma: float,
                  U: np.ndarray,
-                 planner: 'MLEModelUpdate'):
+                 planner: 'ModelUpdateScheme'):
         super().__init__(S, A, gamma, U, planner)
         self.N = N      # transition count N(s, a, s')
         self.rho = rho  # reward sum p(s, a)
@@ -105,23 +105,17 @@ class ModelUpdateScheme(ABC):
         pass
 
 
-class MLEModelUpdate(ModelUpdateScheme):
-    @abstractmethod
-    def update(self, model: MaximumLikelihoodMDP, s: int, a: int, r: float, s_prime: int):
-        pass
-
-
-class FullUpdate(MLEModelUpdate):
+class FullUpdate(ModelUpdateScheme):
     def __init__(self):
         self.solver = LinearProgramFormulation()
 
     def update(self, model: MaximumLikelihoodMDP, s: int, a: int, r: float, s_prime: int):
         P = model.to_MDP()
-        U = self.solver.solve(P)
+        U = self.solver.solve(P).U
         np.copyto(model.U, U)
 
 
-class RandomizedUpdate(MLEModelUpdate):
+class RandomizedUpdate(ModelUpdateScheme):
     def __init__(self, m: int):
         self.m = m
 
@@ -133,7 +127,7 @@ class RandomizedUpdate(MLEModelUpdate):
             U[s] = model.backup(U, s)
 
 
-class PrioritizedUpdate(MLEModelUpdate):
+class PrioritizedUpdate(ModelUpdateScheme):
     def __init__(self, m: int, pq: PriorityQueue):
         self.m = m    # number of updates
         self.pq = pq  # priority queue
@@ -176,7 +170,7 @@ class RmaxMDP(MaximumLikelihoodMDP):
                  rho: np.ndarray,
                  gamma: float,
                  U: np.ndarray,
-                 planner: MLEModelUpdate,
+                 planner: ModelUpdateScheme,
                  m: int,
                  rmax: float):
         super().__init__(S, A, N, rho, gamma, U, planner)
@@ -207,10 +201,11 @@ class BayesianMDP(ModelBasedMDP):
                  A: list[int],
                  D: np.ndarray,
                  R: Callable[[int, int], float],
-                 gamma: float, U: np.ndarray,
-                 planner: MLEModelUpdate):
+                 gamma: float,
+                 U: np.ndarray,
+                 planner: ModelUpdateScheme):
         super().__init__(S, A, gamma, U, planner)
-        self.D = D          # Dirichlet distributions D[s, a]
+        self.D = D          # Dirichlet distributions D[s, a] w/ |S| variables
         self.R = R          # reward function as matrix (not estimated)
         self.gamma = gamma  # discount
         self.U = U          # value function
@@ -234,12 +229,14 @@ class BayesianMDP(ModelBasedMDP):
         T = np.array([[self.D[s, a].rvs()[0] for a in self.A] for s in self.S])
         return MDP(self.gamma, self.S, self.A, T, self.R)
 
-
-class PosteriorSamplingUpdate(ModelUpdateScheme):
+"""
+You will notice that PosteriorSamplingUpdate is practically an empty class.
+This is because the PosteriorSamplingUpdate scheme for BayesianMDP's is exactly
+the same as the FullUpdate for MaximumLikelihoodMDP's, with one key difference:
+the `to_MDP` method for BayesianMDP's generates an MDP via Bayesian Sampling,
+whereas the same method for MaximumLikelihoodMDP's generates an MDP by
+Maximum Likelihood Estimation
+"""
+class PosteriorSamplingUpdate(FullUpdate):
     def __init__(self):
-        self.solver = LinearProgramFormulation()
-
-    def update(self, model: BayesianMDP, s: int, a: int, r: float, s_prime: int):
-        P = model.to_MDP()  # Sample the Bayesian MDP
-        U = self.solver.solve(P)
-        np.copyto(model.U, U)
+        super().__init__()

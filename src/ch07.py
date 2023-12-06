@@ -43,7 +43,7 @@ class MDP():
         # sample next state and reward given current state and action: s', r = TR(s, a)
         if type(T) == np.ndarray:
             self.T = lambda s, a, s_prime: T[s, a, s_prime]
-            self.TR = lambda s, a: (np.random.choice(len(self.S), p=T[s, a]), self.R(s, a))
+            self.TR = lambda s, a: (np.random.choice(len(self.S), p=T[s, a]), self.R(s, a)) if not np.all(T[s, a] == 0) else (np.random.choice(len(self.S)), self.R(s, a))
         else:
             self.T = T
             self.TR = TR
