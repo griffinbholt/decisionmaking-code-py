@@ -23,7 +23,7 @@ class RLMDP(ABC):
 
 
 class ModelBasedMDP(RLMDP):
-    def __init__(self, S: list[int], A: list[int], gamma: float, U: np.ndarray, planner: 'MLEModelUpdate'):
+    def __init__(self, S: list[int], A: list[int], gamma: float, U: np.ndarray, planner: 'ModelUpdateScheme'):
         super().__init__(A, gamma)
         self.S = S  # state space (assumes 1:nstates)
         self.U = U  # value function
