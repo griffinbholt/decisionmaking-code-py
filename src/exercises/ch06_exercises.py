@@ -1,10 +1,10 @@
 import sys; sys.path.append('../'); sys.path.append('../examples/')
 
-
 import numpy as np
 
 
 def exercise_6_3():
+    """Exercise 6.3: Utility of Lotteries"""
     S = ['A', 'B', 'C']                      # Outcomes
     U_S = np.array([5, 20, 0])               # Utilities of each outcome
     lotteries = np.array([[0.0, 0.5, 0.5],   # Lottery 1
@@ -22,6 +22,7 @@ def exercise_6_3():
 
 
 def exercise_6_5():
+    """Exercise 6.5: Maximum Expected Utility for Simple Weather Forecast Problem"""
     from problems.SimpleWeatherForecast import P, U  # from Example 6.3
 
     o = 'forecast sun'  # Assumption
@@ -36,6 +37,7 @@ def exercise_6_5():
 
 
 def exercise_6_6(print_results=False):
+    """Exercise 6.6: Maximum Expected Utility for Simple Feeding Puppy Problem"""
     from problems.SimpleFeedingPuppy import U, H
 
     P_h_given_whining = {'not hungry': 0.22, 'hungry': 0.78}
@@ -52,6 +54,7 @@ def exercise_6_6(print_results=False):
 
 
 def exercise_6_7():
+    """Exercise 6.7: VOI for Simple Feeding Puppy Problem"""
     from problems.SimpleFeedingPuppy import U, F, H, R  # from Exercise 6.6
 
     P_h_given_whining_r = {('not hungry', 'not fed recently'): 0.1,

@@ -59,7 +59,15 @@ def exercise_7_6():
     print("U(s_2) =", policy_after_two_steps.U[1])
     print("U(s_3) =", policy_after_two_steps.U[2])
 
-# TODO Exercise 7.7
+def exercise_7_7():
+    """Exercise 7.7: Asynchronous Value Iteration on Three-tile, Straight-line Hexworld"""
+    P = ThreeTileStraightLineHexWorld
 
+    # Asynchronous Value Iteration (from right to left)
+    U = np.zeros(len(P.S))
+    for s in reversed(P.S):
+        U[s] = P.backup(U, s)
 
-exercise_7_6()
+    print("U(s_3) =", U[2])
+    print("U(s_2) =", U[1])
+    print("U(s_1) =", U[0])

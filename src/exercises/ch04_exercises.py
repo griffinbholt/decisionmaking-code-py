@@ -55,7 +55,7 @@ def exercise_4_4():
 
 
 def exercise_4_5():
-    """Exercise 4.5: Biased Coin"""
+    """Exercise 4.5: Estimating Probability for Biased Coin"""
     n = 1  # number of successes
     m = 1  # number of trials
 
