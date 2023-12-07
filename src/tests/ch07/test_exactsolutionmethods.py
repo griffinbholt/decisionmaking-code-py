@@ -1,16 +1,16 @@
 import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 import numpy as np
-import problems.ThreeTileStraightLineHexworld
+from problems.HexWorldMDP import ThreeTileStraightLineHexWorld, three_tile_init_policy, action_to_idx
 
 from typing import Any, Callable
 from ch07 import ExactSolutionMethod, PolicyIteration, ValueIteration, GaussSeidelValueIteration, LinearProgramFormulation
 
 class TestExactSolutionMethods():
-    P = problems.ThreeTileStraightLineHexworld.P
+    P = ThreeTileStraightLineHexWorld
 
     def test_policy_iteration(self):
-        init_policy = problems.ThreeTileStraightLineHexworld.init_policy
+        init_policy = three_tile_init_policy
         policy_iteration = PolicyIteration(init_policy, k_max=10)
         policy = self.run_solve(policy_iteration)
         self.assert_all_east(policy)
@@ -37,4 +37,4 @@ class TestExactSolutionMethods():
 
     def assert_all_east(self, policy: Callable[[Any], Any]):
         for state in self.P.S:
-            assert(policy(state) == "east")
+            assert(policy(state) == action_to_idx["east"])

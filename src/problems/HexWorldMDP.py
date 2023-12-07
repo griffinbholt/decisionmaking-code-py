@@ -6,6 +6,9 @@ from typing import Dict, List, Tuple
 
 from ch07 import MDP
 
+action_to_idx = {"east": 0, "northeast": 1, "northwest": 2, "west": 3, "southwest": 4, "southeast": 5}
+idx_to_action = {0: "east", 1: "northeast", 2: "northwest", 3: "west", 4: "southwest", 5: "southeast"}
+
 
 class HexWorldMDP(MDP):
     def __init__(self, 
@@ -107,3 +110,22 @@ StraightLineHexWorld = HexWorldMDP(
     gamma=0.9
 )
 
+ThreeTileStraightLineHexWorld = HexWorldMDP(
+    hexes=[(0,0),(1,0),(2,0)],
+    r_bump_border=-1.0,
+    p_intended=0.7,
+    special_hex_rewards={
+        (2,0): 10.0  # right side reward
+    },
+    gamma=0.9
+)
+
+def three_tile_init_policy(s):
+    if s == 0:
+        return action_to_idx["east"]
+    elif s == 1:
+        return action_to_idx["northeast"]
+    elif s == 2:
+        return action_to_idx["southwest"]
+    else:  # s == Terminal State
+        return np.random.randint(len(action_to_idx))  # Any action

@@ -2,7 +2,7 @@ import sys; sys.path.append('../')
 
 import numpy as np
 
-import problems.ThreeTileStraightLineHexworld
+from problems.HexWorldMDP import ThreeTileStraightLineHexWorld, three_tile_init_policy, idx_to_action
 from ch07 import PolicyIteration, ValueIteration
 
 def exercise_7_4():
@@ -32,19 +32,18 @@ def exercise_7_4():
 
 def exercise_7_5():
     """Exercise 7.5: Policy Iteration on Three-tile, Straight-line Hexworld"""
-    P = problems.ThreeTileStraightLineHexworld.P  # MDP
-    init_policy = problems.ThreeTileStraightLineHexworld.P
-    
-    M = PolicyIteration(initial_policy=init_policy, k_max=1)
+    P = ThreeTileStraightLineHexWorld
+
+    M = PolicyIteration(initial_policy=three_tile_init_policy, k_max=1)
     resulting_policy = M.solve(P)
 
-    print("pi(s_1) =", resulting_policy(P.S[0]))
-    print("pi(s_2) =", resulting_policy(P.S[1]))
-    print("pi(s_3) =", resulting_policy(P.S[2]))
+    print("pi(s_1) =", idx_to_action[resulting_policy(P.S[0])])
+    print("pi(s_2) =", idx_to_action[resulting_policy(P.S[1])])
+    print("pi(s_3) =", idx_to_action[resulting_policy(P.S[2])])
 
 def exercise_7_6():
     """Exercise 7.6: Value Iteration on Three-tile, Straight-line Hexworld"""
-    P = problems.ThreeTileStraightLineHexworld.P  # MDP
+    P = ThreeTileStraightLineHexWorld
 
     M = ValueIteration(k_max=1)
     policy_after_one_step = M.solve(P)
@@ -60,4 +59,4 @@ def exercise_7_6():
     print("U(s_2) =", policy_after_two_steps.U[1])
     print("U(s_3) =", policy_after_two_steps.U[2])
 
-exercise_7_4()
+exercise_7_6()
