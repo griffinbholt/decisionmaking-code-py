@@ -59,4 +59,7 @@ def exercise_7_6():
     print("U(s_2) =", policy_after_two_steps.U[1])
     print("U(s_3) =", policy_after_two_steps.U[2])
 
+# TODO Exercise 7.7
+
+
 exercise_7_6()

@@ -1,5 +1,6 @@
 jax==0.4.19
 jaxlib==0.4.19
+matplotlib==3.8.2
 networkx==3.2
 numpy==1.26.1
 pandas==2.1.2

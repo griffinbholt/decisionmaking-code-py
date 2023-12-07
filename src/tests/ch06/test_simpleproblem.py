@@ -1,6 +1,7 @@
+import sys; sys.path.append('./src/'); sys.path.append('../../')
+
 import networkx as nx
 import numpy as np
-import sys; sys.path.append('./src/'); sys.path.append('../../')
 
 from ch02 import Variable, Assignment, FactorTable, Factor, BayesianNetwork
 from ch03 import ExactInference
@@ -24,7 +25,7 @@ class TestSimpleProblemMethods():
     utilities = {"U": np.array([0, -10, -1])}  # 0, 1, 2
 
     graph = nx.DiGraph()
-    graph.add_nodes_from(range(6))
+    graph.add_nodes_from(range(len(variables)))
     graph.add_edges_from([(0, 2), (1, 2), (1, 3), (1, 4), (1, 5)])
 
     factors = [

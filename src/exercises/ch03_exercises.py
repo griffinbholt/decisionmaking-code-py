@@ -1,6 +1,8 @@
+import sys; sys.path.append('../')
+
 import networkx as nx
 import numpy as np
-import sys; sys.path.append('../')
+
 from scipy.stats import multivariate_normal
 
 from ch02 import Variable, Assignment, Factor, FactorTable, BayesianNetwork
