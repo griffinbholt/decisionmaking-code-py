@@ -2,10 +2,10 @@ import numpy as np
 import random
 
 from abc import abstractmethod
-from typing import Any, Callable, Type
+from typing import Any, Callable
 from scipy.stats import rv_continuous, multivariate_normal
 
-from ch07 import MDP, SolutionMethod
+from ch07 import MDP, MDPSolutionMethod
 from ch09 import rollout
 
 
@@ -24,13 +24,13 @@ class MonteCarloPolicyEvaluation():
         return self.evaluate_policy(lambda s: policy(theta, s))
 
 
-class PolicySearchMethod(SolutionMethod):
+class PolicySearchMethod(MDPSolutionMethod):
     @abstractmethod
     def optimize(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> np.ndarray:
         pass
 
 
-class SearchDistributionMethod(SolutionMethod):
+class SearchDistributionMethod(MDPSolutionMethod):
     @abstractmethod
     def optimize_dist(self, policy: Callable[[np.ndarray, Any], Any], U: MonteCarloPolicyEvaluation) -> rv_continuous:
         pass
