@@ -33,7 +33,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 13 | ▌▌▌▌▌▌▌▌▌ 90% | 0% | Need to ask Mykel some questions |
 | 14 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 15 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
-| 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready** |
+| 16 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 17 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌ 10% | `IncrementalEstimate` tested; the rest needs to be tested |
 | 18 | ▌▌▌▌▌▌▌▌▌ 99% | 0% | Need to ask Mykel some questions |
 | 19 | ▌▌▌▌ 40% | 0% | `UnscentedKalmanFilter` and the particle filters need to be written |
