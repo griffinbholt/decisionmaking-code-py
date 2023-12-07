@@ -145,9 +145,13 @@ class MonteCarloTreeSearch(OnlinePlanningMethod):
         return q
 
     def explore(self, s: Any) -> Any:
-        A, N, Q, c = self.P.A, self.N, self.Q, self.c
+        A, N = self.P.A, self.N
         Ns = np.sum([N[(s, a)] for a in A])
-        return A[np.argmax([Q[(s, a)] + c*self.bonus(N[(s, a)], Ns) for a in A])]
+        return A[np.argmax([self.ucb1(s, a, Ns) for a in A])]
+
+    def ucb1(self, s: Any, a: Any, Ns: int) -> float:
+        N, Q, c = self.N, self.Q, self.c
+        return Q[(s, a)] + c*self.bonus(N[(s, a)], Ns)
 
     @staticmethod
     def bonus(Nsa: int, Ns: int) -> float:

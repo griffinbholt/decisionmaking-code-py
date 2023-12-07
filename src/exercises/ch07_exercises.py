@@ -27,7 +27,7 @@ def exercise_7_4():
     print(header)
     print(border)
     for s in range(len(S)):
-            print('| {:^2} | {:>4.2f} | {:^5} | {:>7.2f} | {:>7.2f} | {:>7.2f} | {:>7.2f} |'.format("s" + str(s + 1), U[s], "a" + str(policy(s) + 1), A[s, 0], A[s, 1], A[s, 2], A[s, 3]))
+        print('| {:^2} | {:>4.2f} | {:^5} | {:>7.2f} | {:>7.2f} | {:>7.2f} | {:>7.2f} |'.format("s" + str(s + 1), U[s], "a" + str(policy(s) + 1), A[s, 0], A[s, 1], A[s, 2], A[s, 3]))
     print(border)
 
 def exercise_7_5():

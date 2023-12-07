@@ -6,7 +6,7 @@ import numpy as np
 from ch08 import ApproximateValueIteration, LinearRegressionValueFunction
 from problems.MountainCarMDP import MountainCar
 
-def example_8_1(): # TODO - Need to fix how V is generated
+def example_8_1():
     """Example 8.1: Simplex interpolation in three dimensions"""
     s = np.array([0.3, 0.7, 0.2])  # State
 
@@ -24,7 +24,22 @@ def example_8_1(): # TODO - Need to fix how V is generated
 
 
 def example_8_2():
-    pass  # TODO
+    """
+    Example 8.2: Using a linear approximation to the mountain car value function.
+    The choice of basis functions makes a big difference. The optimal value function
+    for the mountain car is nonlinear, with a spiral shape and discontinuities.
+    Even sixth-degree polynomials do not produce a perfect fit.
+    """
+    P = MountainCar
+    ss = np.array([[x, v] for x in np.linspace(P.STATE_MINS[0], P.STATE_MAXS[0], 100) for v in np.linspace(P.STATE_MINS[1], P.STATE_MAXS[1], 100)])
+    def beta(s: np.ndarray, deg=6) -> np.ndarray:
+        x, v = s
+        return np.concatenate([[(x**(i - j))*(v**j) for j in range(i + 1)] for i in range(deg + 1)])
+
+    U_theta = LinearRegressionValueFunction(beta=beta, theta=np.zeros(28))
+    ApproximateValueIteration(U_theta, ss, k_max=1000).solve(P)
+
+    # TODO - Talk to Mykel - because I can't iterate over states, I don't know how to do a backup/lookahead in ApproximateValueIteration
 
 
 def example_8_3():
