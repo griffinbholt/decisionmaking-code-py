@@ -46,7 +46,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 26 | 0% | 0% | Nothing written |
 | 27 | 0% | 0% | Nothing written |
 
-I have also written code for pertinent examples and exercises through Chapter 9.
+I have also written code for pertinent examples and exercises through Chapter 11.
 
 <!-- TODO - I need to go through and check that all functions have proper parameter
 and return signatures. -->
