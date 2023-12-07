@@ -8,7 +8,7 @@ def example_6_3():
     Example 6.3: Applying the principle of maximum expected utility to the
     simple decision of whether to bring an umbrella
     """
-    from problems.SimpleWeatherForecast import P, U
+    from problems.WeatherForecastSimpleProblem import P, U
 
     o = 'forecast rain'  # Assumption
 

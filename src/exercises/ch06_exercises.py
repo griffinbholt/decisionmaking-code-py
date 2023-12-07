@@ -23,7 +23,7 @@ def exercise_6_3():
 
 def exercise_6_5():
     """Exercise 6.5: Maximum Expected Utility for Simple Weather Forecast Problem"""
-    from problems.SimpleWeatherForecast import P, U  # from Example 6.3
+    from problems.WeatherForecastSimpleProblem import P, U  # from Example 6.3
 
     o = 'forecast sun'  # Assumption
 
@@ -38,7 +38,7 @@ def exercise_6_5():
 
 def exercise_6_6(print_results=False):
     """Exercise 6.6: Maximum Expected Utility for Simple Feeding Puppy Problem"""
-    from problems.SimpleFeedingPuppy import U, H
+    from problems.FeedingPuppySimpleProblem import U, H
 
     P_h_given_whining = {'not hungry': 0.22, 'hungry': 0.78}
 
@@ -55,7 +55,7 @@ def exercise_6_6(print_results=False):
 
 def exercise_6_7():
     """Exercise 6.7: VOI for Simple Feeding Puppy Problem"""
-    from problems.SimpleFeedingPuppy import U, F, H, R  # from Exercise 6.6
+    from problems.FeedingPuppySimpleProblem import U, F, H, R  # from Exercise 6.6
 
     P_h_given_whining_r = {('not hungry', 'not fed recently'): 0.1,
                            ('hungry', 'not fed recently'):     0.9,

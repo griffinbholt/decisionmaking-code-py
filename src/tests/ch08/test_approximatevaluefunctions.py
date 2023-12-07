@@ -55,7 +55,6 @@ class TestApproximateValueFunctions():
     def test_linear_regression(self):
         ss = [0, 2, 4, 6, 7]  # NOTE: 7 is terminal state
         def beta(s): return np.array([1.0, s, s**2, s == 7])
-        delta = 0.1
 
         U_theta = LinearRegressionValueFunction(beta, np.zeros(4))
         policy = ApproximateValueIteration(U_theta, ss, k_max=50).solve(StraightLineHexWorld)
