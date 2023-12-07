@@ -17,7 +17,19 @@ def exercise_8_4():
 
 
 def exercise_8_7():
-    pass  # TODO
+    """Example 8.7: Bilinear interpolation in two dimensions"""
+    states = np.array([[0, 5], [0, 25], [1, 5], [1, 25]])  # known states
+    s = np.array([0.7, 10])                                # new state
+    
+    all_states = np.vstack([states, s])
+    x = np.unique(all_states[:, 0])  # (x_1, x_new, x_2)
+    y = np.unique(all_states[:, 1])  # (y_1, y_new, y_2)
+ 
+    numers = np.flip(np.outer(np.diff(x), np.diff(y)).flatten())
+    denom = np.ptp(x) * np.ptp(y)
+    weights = numers / denom
+    
+    print("Weights: w = ", weights)
 
 
 def exercise_8_8():
