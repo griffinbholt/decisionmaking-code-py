@@ -2,12 +2,15 @@ import casadi
 import cvxpy as cp
 import numpy as np
 import random
+import warnings
 
 from abc import ABC, abstractmethod
 from itertools import product
-from typing import Any, Callable
+from typing import Any, Callable, Union
 
 from ch23 import project_to_simplex
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def joint_action(X: list[list[Any]]) -> list[tuple[Any]]:
@@ -33,7 +36,7 @@ class SimpleGame():
     def tensorform(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         I_tensor = np.arange(len(self.I))
         A_tensor = np.array([np.arange(len(self.A[i])) for i in range(len(self.I))])
-        R_tensor = np.array(self.R(a) for a in joint_action(self.A))
+        R_tensor = np.array([self.R(a) for a in joint_action(self.A)])
         return I_tensor, A_tensor, R_tensor
 
     def utility(self, policy: list['SimpleGamePolicy'], i: int) -> float:
@@ -78,7 +81,7 @@ class SimpleGame():
         return policy
 
 
-def SimpleGamePolicy():
+class SimpleGamePolicy():
     """
     A policy associated with an agent is represented by a dictionary that maps
     actions to probabilities. There are different ways to construct a policy. One
@@ -89,7 +92,7 @@ def SimpleGamePolicy():
     def __init__(self, p: dict[Any, float] | Any):
         # self.p: dictionary mapping actions to probabilities
         if isinstance(p, dict):  # p: dictionary mapping actions to unnormalized probs
-            val_sum = np.sum(p.values())
+            val_sum = np.sum(list(p.values()))
             self.p = {k: v / val_sum for k, v in p.items()}
         else:                    # p: a single action, assigned probability 1
             self.p = {p: 1.0}
@@ -108,7 +111,7 @@ def SimpleGamePolicy():
 
 class SimpleGamePolicySolutionMethod(ABC):
     @abstractmethod
-    def solve(self, P: SimpleGame) -> list[SimpleGamePolicy] | 'JointCorrelatedPolicy':
+    def solve(self, P: SimpleGame) -> Union[list[SimpleGamePolicy], 'JointCorrelatedPolicy']:
         pass
 
 
@@ -128,15 +131,17 @@ class NashEquilibrium(SimpleGamePolicySolutionMethod):
         opti.subject_to([policy[i] >= 0 for i in I])
 
         # Nonlinear objective
-        opti.minimize(casadi.sum1([U[i] - casadi.sum1([casadi.mtimes([policy[j][a[j]] for j in I]) * R[y, i] \
-                                                       for (y, a) in enumerate(joint_action(A))]) for i in I]))
+        objective = sum([U[i] - sum([casadi.mtimes([policy[j][a[j]] for j in I]) * R[y, i] \
+                                                    for (y, a) in enumerate(joint_action(A))]) for i in I])
+        opti.minimize(objective)
+
         # Constraints
         opti.subject_to([
-            U[i] >= casadi.sum1([
+            U[i] >= sum([
                 casadi.mtimes([(1.0 if a[j] == a_i else 0.0) if j == i else policy[j][a[j]] for j in I])\
                 * R[y, i] for (y, a) in enumerate(joint_action(A))])\
             for i in I for a_i in A[i]])
-        opti.subject_to([casadi.sum1([policy[i][a_i] for a_i in A[i]]) == 1 for i in I])
+        opti.subject_to([sum([policy[i][a_i] for a_i in A[i]]) == 1 for i in I])
 
         # Utilize the Ipopt solver
         options = {'ipopt.print_level': 0, 'print_time': 0, 'ipopt.sb': 'yes'}
@@ -244,8 +249,8 @@ class SimpleGameSimulativeMethod(ABC):
         self.i = i                # agent index
         self.policy_i = policy_i  # current policy
 
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def create_from_game(P: SimpleGame, i: int) -> 'SimpleGamePolicySolutionMethod':
         pass
 
