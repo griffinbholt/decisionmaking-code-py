@@ -52,3 +52,5 @@ I have also written code for pertinent examples and exercises through Chapter 11
 and return signatures. -->
 
 <!-- TODO - I need to go through all of the def(...)... one line functions and make sure that parameters are passed through so they persist. -->
+
+<!-- TODO - Suppress the Deprecated Warnings in pytest: https://docs.pytest.org/en/stable/how-to/capture-warnings.html -->
