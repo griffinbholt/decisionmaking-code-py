@@ -192,7 +192,6 @@ class CorrelatedEquilibrium(SimpleGamePolicySolutionMethod):
         constraints += [cp.sum(policy) == 1]  # Probability constraint
         problem = cp.Problem(objective, constraints)
         problem.solve()
-        print(problem.status)
         return JointCorrelatedPolicy({a: policy.value[i] for i, a in enumerate(joint_A)})
 
 
@@ -314,7 +313,7 @@ class GradientAscent(SimpleGameSimulativeMethod):
 
     def update(self, a: list[Any]):
         A_i = self.P.A[self.i]
-        def joint_p(a_i): return [SimpleGamePolicy({a_i if j == self.i else a[j] for j in self.P.I})]
+        def joint_p(a_i): return [SimpleGamePolicy(a_i if j == self.i else a[j]) for j in self.P.I]
         r = np.array([self.P.utility(joint_p(a_i), self.i) for a_i in A_i])
         policy_prime = np.array([self.policy_i(a_i) for a_i in A_i])
         policy = project_to_simplex(policy_prime + r/np.sqrt(self.t))

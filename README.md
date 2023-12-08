@@ -41,7 +41,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 21 | ▌▌▌▌▌▌▌▌ 80% | 0% | `SawtoothHeuristicSearch`, `TriangulatedPolicy`, and `TriangulatedIteration` need to be written |
 | 22 | 0% | 0% | Nothing written |
 | 23 | ▌ 5% | 0% | Nothing written |
-| 24 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
+| 24 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 25 | 0% | 0% | Nothing written |
 | 26 | 0% | 0% | Nothing written |
 | 27 | 0% | 0% | Nothing written |
