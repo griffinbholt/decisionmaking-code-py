@@ -14,7 +14,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 **Note:** Rewriting all of the typeset code blocks from the book in Python has convinced me of one thing: Julia was the correct choice of programming language for code in the book. Many aspects of Julia's structure (including typing, inclusion of unicode characters, anonymous functions, mutable function declaration, etc.) make it much more ideal for communicating an algorithm than Python. If you are a student in Mykel's AA228/CS238 course or a reader that wishes to dive deep into sequential decision making, I would recommend you just learn Julia's syntax. However, if you need a quick Pythonic reference, that's what this library is for. (This has also been a great exercise for me to ensure and deepen my understanding of the material.)
 
-## Progress Update: (7 Dec 2023)
+## Progress Update: (8 Dec 2023)
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
@@ -40,8 +40,8 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 20 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 21 | ▌▌▌▌▌▌▌▌ 80% | 0% | `SawtoothHeuristicSearch`, `TriangulatedPolicy`, and `TriangulatedIteration` need to be written |
 | 22 | 0% | 0% | Nothing written |
-| 23 | 0% | 0% | Nothing written |
-| 24 | 0% | 0% | Nothing written |
+| 23 | ▌ 5% | 0% | Nothing written |
+| 24 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 25 | 0% | 0% | Nothing written |
 | 26 | 0% | 0% | Nothing written |
 | 27 | 0% | 0% | Nothing written |
