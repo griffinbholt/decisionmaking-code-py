@@ -52,9 +52,15 @@ class SimpleGame():
         """
         For a simple game, we can compute a deterministic best response for agent
         `i`, given that the other agents are playing the policies in `policy`.
+        
+        NOTE: I added non-determinism in the case where multiple actions have
+        the same utility.
         """
         def U(a_i): return self.utility(joint_policy(policy, SimpleGamePolicy(a_i), i), i)
-        a_i = np.argmax([U(a) for a in self.A[i]])
+        U_i = np.array([U(a) for a in self.A[i]])
+        options = np.argwhere(U_i == np.max(U_i)).T[0]
+        selected = options[0] if len(options) == 1 else np.random.choice(options)
+        a_i = self.A[i][selected]
         return SimpleGamePolicy(a_i)
 
     def softmax_response(self, policy: list['SimpleGamePolicy'], i: int, lam: float) -> 'SimpleGamePolicy':
@@ -106,7 +112,7 @@ class SimpleGamePolicy():
         """
         if a_i is not None:
             return self.p.get(a_i, 0.0)
-        return random.choices(self.p.keys(), weights=self.p.values())[0]
+        return random.choices(list(self.p.keys()), weights=list(self.p.values()))[0]
 
 
 class SimpleGamePolicySolutionMethod(ABC):
@@ -186,6 +192,7 @@ class CorrelatedEquilibrium(SimpleGamePolicySolutionMethod):
         constraints += [cp.sum(policy) == 1]  # Probability constraint
         problem = cp.Problem(objective, constraints)
         problem.solve()
+        print(problem.status)
         return JointCorrelatedPolicy({a: policy.value[i] for i, a in enumerate(joint_A)})
 
 
@@ -283,7 +290,7 @@ class FictitiousPlay(SimpleGameSimulativeMethod):
     def update(self, a: list[Any]):
         for (j, a_j) in enumerate(a):
             self.N[j][a_j] += 1
-        def p(j): return SimpleGamePolicy({a_j: u/np.sum(self.N[j].values()) for (a_j, u) in self.N[j]})
+        def p(j): return SimpleGamePolicy({a_j: u/np.sum(list(self.N[j].values())) for (a_j, u) in self.N[j].items()})
         policy = [p(j) for j in self.P.I]
         self.policy_i = self.P.best_response(policy, self.i)
 
