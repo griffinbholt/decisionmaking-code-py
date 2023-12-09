@@ -40,7 +40,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 | 20 | ▌▌▌▌▌▌▌▌▌▌ 100% | 0% | Needs to be tested |
 | 21 | ▌▌▌▌▌▌▌▌ 80% | 0% | `SawtoothHeuristicSearch`, `TriangulatedPolicy`, and `TriangulatedIteration` need to be written |
 | 22 | 0% | 0% | Nothing written |
-| 23 | ▌ 5% | 0% | Nothing written |
+| 23 | ▌ 5% | 0% | `project_to_simplex` is written; everything else needs to be written |
 | 24 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 | 25 | ▌▌▌▌▌▌ 60% | 0% | `MGFictitiousPlay`, `MGGradientAscent`, and `NashQLearning` need to be written |
 | 26 | 0% | 0% | Nothing written |
