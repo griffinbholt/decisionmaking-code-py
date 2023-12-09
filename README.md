@@ -18,7 +18,7 @@ If you encounter any issues or have pressing comments, please [file an issue](ht
 
 | Chapter(s) | Written | Tested | Notes |
 |--:|:--|:--|:--|
-|  1 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
+|  1 | N/A | N/A | No code blocks in this chapter |
 |  2 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  3 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
 |  4 | ▌▌▌▌▌▌▌▌▌▌ 100% | ▌▌▌▌▌▌▌▌▌▌ 100% | **Ready for use** |
