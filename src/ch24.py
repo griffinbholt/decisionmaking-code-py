@@ -87,6 +87,11 @@ class SimpleGame():
         return policy
 
 
+class TODO():  # Generic for class typing that needs to be clarified
+    pass
+
+# TODO - Also need to think deeper about best structure for how SimpleGamePolicy and MGPolicy interact
+
 class SimpleGamePolicy():
     """
     A policy associated with an agent is represented by a dictionary that maps
