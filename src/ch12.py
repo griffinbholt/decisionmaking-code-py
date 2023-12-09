@@ -1,3 +1,5 @@
+"""Chapter 12: Policy Gradient Optimization"""
+
 import numpy as np
 import random
 

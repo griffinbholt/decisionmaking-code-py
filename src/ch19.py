@@ -1,3 +1,5 @@
+"""Chapter 19: Beliefs"""
+
 import jax.numpy as jnp
 import numpy as np
 import random

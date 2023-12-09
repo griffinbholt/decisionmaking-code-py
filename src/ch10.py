@@ -1,3 +1,5 @@
+"""Chapter 10: Policy Search"""
+
 import numpy as np
 import random
 

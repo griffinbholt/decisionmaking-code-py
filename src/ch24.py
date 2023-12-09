@@ -1,3 +1,5 @@
+"""Chapter 24: Multiagent Reasoning"""
+
 import casadi
 import cvxpy as cp
 import numpy as np

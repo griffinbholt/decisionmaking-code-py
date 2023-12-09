@@ -1,3 +1,5 @@
+"""Chapter 3: Inference"""
+
 import networkx as nx
 import numpy as np
 

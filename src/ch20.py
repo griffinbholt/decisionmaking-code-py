@@ -1,3 +1,5 @@
+"""Chapter 20: Exact Belief State Planning"""
+
 import cvxpy as cp
 import itertools
 import numpy as np

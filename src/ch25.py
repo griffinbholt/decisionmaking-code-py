@@ -1,3 +1,5 @@
+"""Chapter 25: Sequential Problems"""
+
 import casadi
 import numpy as np
 import random

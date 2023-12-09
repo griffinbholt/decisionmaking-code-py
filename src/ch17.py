@@ -1,3 +1,5 @@
+"""Chapter 17: Model-Free Methods"""
+
 import numpy as np
 import random
 

@@ -1,3 +1,5 @@
+"""Chapter 4: Parameter Learning"""
+
 import networkx as nx
 import numpy as np
 

@@ -1,3 +1,5 @@
+"""Chapter 13: Actor-Critic Methods"""
+
 import numpy as np
 import random
 

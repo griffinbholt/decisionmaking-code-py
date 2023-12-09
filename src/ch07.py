@@ -1,3 +1,5 @@
+"""Chapter 7: Exact Solution Methods"""
+
 import cvxpy as cp
 import numpy as np
 import random
@@ -7,6 +9,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 class MDP():
     """

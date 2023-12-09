@@ -1,3 +1,5 @@
+"""Chapter 18: Imitation Learning"""
+
 import cvxpy as cp
 import numpy as np
 import random

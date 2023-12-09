@@ -1,3 +1,5 @@
+"""Chapter 2: Representation"""
+
 import itertools
 import networkx as nx
 import numpy as np

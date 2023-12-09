@@ -1,3 +1,5 @@
+"""Chapter 5: Structure Learning"""
+
 import itertools
 import networkx as nx
 import numpy as np

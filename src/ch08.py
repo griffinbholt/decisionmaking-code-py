@@ -1,3 +1,5 @@
+"""Chapter 8: Approximate Value Functions"""
+
 import numpy as np
 
 from abc import ABC, abstractmethod

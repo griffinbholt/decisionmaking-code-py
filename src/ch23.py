@@ -1,3 +1,5 @@
+"""Chapter 23: Controller Abstractions"""
+
 import numpy as np
 
 def project_to_simplex(y: np.ndarray) -> np.ndarray:

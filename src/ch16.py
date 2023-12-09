@@ -1,3 +1,5 @@
+"""Chapter 16: Model-Based Methods"""
+
 import numpy as np
 
 from abc import ABC, abstractmethod

@@ -1,3 +1,5 @@
+"""Chapter 21: Offline Belief State Planning"""
+
 import numpy as np
 import random
 

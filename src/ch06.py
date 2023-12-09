@@ -1,3 +1,5 @@
+"""Chapter 6: Simple Decisions"""
+
 import numpy as np
 
 from ch02 import Variable, Assignment, BayesianNetwork, assignments

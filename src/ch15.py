@@ -1,3 +1,5 @@
+"""Chapter 15: Exploration and Exploitation"""
+
 import numpy as np
 
 from abc import ABC, abstractmethod
