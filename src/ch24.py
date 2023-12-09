@@ -103,7 +103,7 @@ class SimpleGamePolicy():
         else:                    # p: a single action, assigned probability 1
             self.p = {p: 1.0}
 
-    def __call__(self, a_i: Any = None) -> float:
+    def __call__(self, a_i: Any = None, s: TODO = None) -> float:
         """
         If we have an individual policy `policy_i`, we can call `policy_i(a_i)`
         to compute the probability the policy associates with action `a_i`. If
@@ -127,6 +127,7 @@ class NashEquilibrium(SimpleGamePolicySolutionMethod):
     """
     def solve(self, P: SimpleGame) -> list[SimpleGamePolicy]:
         I, A, R = P.tensorform()
+        joint_A = joint_action(A)
         opti = casadi.Opti()
 
         # Variables
@@ -138,14 +139,14 @@ class NashEquilibrium(SimpleGamePolicySolutionMethod):
 
         # Nonlinear objective
         objective = sum([U[i] - sum([casadi.mtimes([policy[j][a[j]] for j in I]) * R[y, i] \
-                                                    for (y, a) in enumerate(joint_action(A))]) for i in I])
+                         for (y, a) in enumerate(joint_A)]) for i in I])
         opti.minimize(objective)
 
         # Constraints
         opti.subject_to([
             U[i] >= sum([
                 casadi.mtimes([(1.0 if a[j] == a_i else 0.0) if j == i else policy[j][a[j]] for j in I])\
-                * R[y, i] for (y, a) in enumerate(joint_action(A))])\
+                * R[y, i] for (y, a) in enumerate(joint_A)])\
             for i in I for a_i in A[i]])
         opti.subject_to([sum([policy[i][a_i] for a_i in A[i]]) == 1 for i in I])
 
@@ -257,7 +258,7 @@ class SimpleGameSimulativeMethod(ABC):
 
     @staticmethod
     @abstractmethod
-    def create_from_game(P: SimpleGame, i: int) -> 'SimpleGamePolicySolutionMethod':
+    def create_from_game(P: SimpleGame, i: int) -> 'SimpleGameSimulativeMethod':
         pass
 
     def __call__(self, a_i: Any = None):
@@ -267,6 +268,7 @@ class SimpleGameSimulativeMethod(ABC):
     def update(self, a: list[Any]):
         pass
 
+# TODO - Evaluate if a is `Any` or should be `tuple[Any]` if representing joint action space
 
 class FictitiousPlay(SimpleGameSimulativeMethod):
     """
