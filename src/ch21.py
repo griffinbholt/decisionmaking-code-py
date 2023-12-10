@@ -117,7 +117,7 @@ class RandomizedPointBasedValueIteration(PointBasedValueIteration):
         return LookaheadAlphaVectorPolicy(P, V)
 
 
-def SawtoothPolicy(POMDPPolicy):
+class SawtoothPolicy(POMDPPolicy):
     def __init__(self, P: POMDP, V: dict[np.ndarray, float]):
         self.P = P  # POMDP problem
         self.V = V  # dictionary mapping beliefs to utilities
@@ -144,7 +144,7 @@ def SawtoothPolicy(POMDPPolicy):
         return self.greedy(b)[0]
 
 
-def SawtoothIteration(OfflinePlanningMethod):  # TODO - Rethink having it inherit from Offline Planning Method
+class SawtoothIteration(OfflinePlanningMethod):  # TODO - Rethink having it inherit from Offline Planning Method
     def __init__(self, V: dict[np.ndarray, float], B: list[np.ndarray], k_max: int):
         super().__init__(k_max)
         self.V = V  # initial mapping from beliefs to utilities
