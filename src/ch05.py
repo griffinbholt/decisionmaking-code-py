@@ -55,11 +55,12 @@ class K2Search(DirectedGraphSearchMethod):
     def fit(self, variables: list[Variable], data: np.ndarray) -> nx.DiGraph:
         graph = nx.DiGraph()
         graph.add_nodes_from(range(len(variables)))
+
+        y = bayesian_score(variables, graph, data)
         for k, i in enumerate(self.ordering[1:]):
-            y = bayesian_score(variables, graph, data)
             while True:
                 y_best, j_best = -np.inf, 0
-                for j in self.ordering[:k]:
+                for j in self.ordering[: k + 1]:
                     if not graph.has_edge(j, i):
                         graph.add_edge(j, i)
                         y_prime = bayesian_score(variables, graph, data)
